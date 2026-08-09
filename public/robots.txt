@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /booking?
+
+Sitemap: https://intonepaltreks.com/sitemap.xml

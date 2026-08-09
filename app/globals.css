@@ -1,0 +1,251 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+@plugin "tailwind-scrollbar-hide";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-sans: var(--font-sans);
+    --font-display: var(--font-serif);
+    --font-serif: var(--font-serif);
+
+    /* Into Nepal Treks color tokens */
+    --color-canvas: #ffffff;
+    --color-canvas-soft: #f2f2f2;
+    --color-canvas-soft-2: #f3f4f6;
+    --color-ink: #1f2528;
+    --color-body: #000000;
+    --color-mute: #6b7280;
+    --color-hairline: #e5e7eb;
+    --color-hairline-strong: #d1d5db;
+    --color-link: #0f77be;
+    --color-link-deep: #0c63a6;
+    --color-link-bg-soft: #e3f0f9;
+    --color-success: #1bbc9b;
+    --color-error: #ef606b;
+    --color-error-soft: #fde7e8;
+    --color-error-deep: #c50000;
+    --color-warning: #f5a623;
+    --color-warning-soft: #ffefcf;
+    --color-warning-deep: #ab570a;
+    --color-violet: #f0534e;
+    --color-violet-soft: #fde3e2;
+    --color-violet-deep: #c13a35;
+    --color-cyan: #1b77bc;
+    --color-cyan-soft: #e3f0f9;
+    --color-cyan-deep: #0c63a6;
+    --color-highlight-pink: #ff7f66;
+    --color-highlight-magenta: #eb367f;
+    --color-on-primary: #ffffff;
+
+    /* Brand palette */
+    --color-navy: #1a2133;
+    --color-section-blue: #0f77be;
+    --color-blog-blue: #1b77bc;
+    --color-footer-blue: #03528d;
+    --color-topbar-grey: #97a0a9;
+    --color-brand-red: #f0534e;
+    --color-brand-red-light: #ff7f66;
+    --color-brand-yellow: #fbe108;
+    --color-gold: #ffce1f;
+
+    /* Brand gradients */
+    --color-gradient-develop-start: #0f77be;
+    --color-gradient-develop-end: #1b77bc;
+    --color-gradient-preview-start: #f0534e;
+    --color-gradient-preview-end: #ff7f66;
+    --color-gradient-ship-start: #0f77be;
+    --color-gradient-ship-end: #fbe108;
+
+    /* Shadcn compat */
+    --color-background: var(--color-canvas-soft);
+    --color-foreground: var(--color-ink);
+    --color-card: var(--color-canvas);
+    --color-card-foreground: var(--color-ink);
+    --color-popover: var(--color-canvas);
+    --color-popover-foreground: var(--color-ink);
+    --color-primary: var(--color-link);
+    --color-primary-foreground: var(--color-on-primary);
+    --color-secondary: var(--color-canvas-soft-2);
+    --color-secondary-foreground: var(--color-ink);
+    --color-muted: var(--color-canvas-soft-2);
+    --color-muted-foreground: var(--color-body);
+    --color-accent: var(--color-canvas-soft-2);
+    --color-accent-foreground: var(--color-ink);
+    --color-destructive: var(--color-error);
+    --color-destructive-foreground: var(--color-on-primary);
+    --color-border: var(--color-hairline);
+    --color-input: var(--color-hairline);
+    --color-ring: var(--color-ink);
+    --color-sidebar: var(--color-canvas);
+    --color-sidebar-foreground: var(--color-ink);
+    --color-sidebar-primary: var(--color-ink);
+    --color-sidebar-primary-foreground: var(--color-on-primary);
+    --color-sidebar-accent: var(--color-canvas-soft-2);
+    --color-sidebar-accent-foreground: var(--color-ink);
+    --color-sidebar-border: var(--color-hairline);
+    --color-sidebar-ring: var(--color-ink);
+
+    /* Radius scale — sharp editorial */
+    --radius: 6px;
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 12px;
+    --radius-2xl: 14px;
+    --radius-3xl: 18px;
+    --radius-pill-sm: 28px;
+    --radius-pill: 9999px;
+    --radius-full: 9999px;
+}
+
+:root {
+    --background: #f2f2f2;
+    --foreground: #1f2528;
+
+    /* Editorial design tokens */
+    --shadow-card: 0 8px 30px -12px rgb(15 119 190 / 0.18);
+    --shadow-soft: 0 2px 12px -4px rgb(15 119 190 / 0.1);
+    --shadow-float: 0 20px 60px -20px rgb(15 119 190 / 0.3);
+    --gradient-hero: linear-gradient(180deg, rgb(0 0 0 / 0.1) 0%, rgb(0 0 0 / 0.55) 100%);
+    --gradient-card: linear-gradient(180deg, transparent 50%, rgb(0 0 0 / 0.75) 100%);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Display heading treatment (serif, tight, editorial) */
+@layer utilities {
+    .text-display {
+        font-family: var(--font-serif);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1;
+    }
+    .gradient-hero {
+        background: var(--gradient-hero);
+    }
+    .gradient-card {
+        background: var(--gradient-card);
+    }
+    .shadow-card {
+        box-shadow: var(--shadow-card);
+    }
+    .shadow-soft {
+        box-shadow: var(--shadow-soft);
+    }
+    .shadow-float {
+        box-shadow: var(--shadow-float);
+    }
+    .ease-smooth {
+        transition-timing-function: var(--ease-smooth);
+    }
+}
+
+/* Rich text content rendered from CMS HTML */
+.rich-text {
+    @apply leading-relaxed;
+}
+.rich-text > * + * {
+    @apply mt-4;
+}
+.rich-text h2 {
+    @apply font-serif text-3xl text-ink mt-8 mb-3;
+}
+.rich-text h3 {
+    @apply font-serif text-2xl text-ink mt-6 mb-2;
+}
+.rich-text h4 {
+    @apply font-serif text-xl text-ink mt-5 mb-2;
+}
+.rich-text p {
+    @apply leading-relaxed;
+}
+.rich-text strong {
+    @apply text-ink font-semibold;
+}
+.rich-text em {
+    @apply italic;
+}
+.rich-text a {
+    @apply text-link underline underline-offset-2 hover:text-link-deep;
+}
+.rich-text ul {
+    @apply space-y-2 pl-0 list-none;
+}
+.rich-text ul > li {
+    @apply relative pl-6;
+}
+.rich-text ul > li::before {
+    content: "—";
+    @apply absolute left-0 text-link;
+}
+.rich-text ol {
+    @apply list-decimal pl-6 space-y-2;
+}
+.rich-text blockquote {
+    @apply border-l-2 border-link pl-5 italic;
+}
+
+.content-body table,
+.prose table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.content-body table td,
+.content-body table th,
+.prose table td,
+.prose table th {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font-size: 1rem;
+    line-height: 1.625;
+    vertical-align: top;
+}
+
+@media (min-width: 768px) {
+    .content-body table td,
+    .content-body table th,
+    .prose table td,
+    .prose table th {
+        font-size: 1.25rem;
+    }
+}
+
+.content-body table th,
+.prose table th {
+    font-weight: 600;
+}
+
+@layer base {
+    * {
+        @apply border-hairline;
+    }
+    body {
+        @apply bg-canvas-soft text-ink font-sans antialiased font-normal;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        @apply font-display;
+    }
+}
+
+@keyframes marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-marquee {
+    animation: marquee 40s linear infinite;
+}
+
+.animate-marquee-reverse {
+    animation: marquee 40s linear infinite reverse;
+}
