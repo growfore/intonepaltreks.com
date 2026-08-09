@@ -156,6 +156,8 @@ export function MenuController({ items }: MenuControllerProps) {
       >
         <div className="flex items-center gap-2">
           <Logo />
+        </div>
+        <div className="flex gap-4 items-center">
           {items.map((item) => {
             const itemHasGrandchildren = hasGrandchildren(item);
             const isActive = activeMega === item.id;
@@ -194,27 +196,12 @@ export function MenuController({ items }: MenuControllerProps) {
           })}
         </div>
 
-        {pathname !== "/" && (
-          <form
-            onSubmit={onSearch}
-            className="hidden xl:flex flex-1 max-w-sm mx-auto items-center gap-2 px-4 py-2 rounded-sm border border-hairline bg-canvas-soft focus-within:border-link transition-colors"
-          >
-            <Search className="w-4 h-4 text-mute shrink-0" />
-            <input
-              value={searchQ}
-              onChange={(e) => setSearchQ(e.target.value)}
-              placeholder="Search trips by name…"
-              className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-mute"
-            />
-          </form>
-        )}
-
         <div className="flex items-center gap-2 md:gap-4">
-          <Link href="/design-your-trip" className="hidden md:inline-flex">
+          {/*<Link href="/design-your-trip" className="hidden md:inline-flex">
             <Button variant="secondary" size="lg">
               <LucidePlusCircle /> Customize My Trip
             </Button>
-          </Link>
+          </Link>*/}
           <Link href="/booking" className="hidden md:inline-flex">
             <Button>Book Now</Button>
           </Link>

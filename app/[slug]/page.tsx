@@ -193,7 +193,9 @@ export default async function BlogSingle({
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <MyBreadCrumb items={breadcrumbItems} />
+      <div className="px-4">
+        <MyBreadCrumb items={breadcrumbItems} />
+      </div>
       <section
         className="pt-8 md:pt-4 p-2
         prose-base leading leading-relaxed
@@ -231,7 +233,7 @@ export default async function BlogSingle({
           <h1 className="text-3xl md:text-5xl font-bold  leading-tight max-w-4xl">
             {blog?.title}
           </h1>
-          <div className="flex justify-between gap-4 text-sm text-foreground w-full mt-4 items-center">
+          {/*<div className="flex justify-between gap-4 text-sm text-foreground w-full mt-4 items-center">
             <div className="flex items-center gap-8">
               <time className="flex items-center">
                 Last Updated:{" "}
@@ -242,7 +244,7 @@ export default async function BlogSingle({
                 })}
               </time>
             </div>
-          </div>
+          </div>*/}
         </header>
 
         <div className="grid md:grid-cols-4 gap-8 py-4">

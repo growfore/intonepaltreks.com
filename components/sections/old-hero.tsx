@@ -27,10 +27,10 @@ const HeroSection = () => {
       <div className="absolute inset-0 gradient-hero" />
 
       <div className="relative z-10 h-full container mx-auto max-w-[1400px] px-4 flex flex-col items-center justify-center text-center pt-16">
-        <p className="text-white/90 text-[11px] uppercase tracking-[0.32em] mb-6">
+        <p className="text-white/90 text-xs uppercase tracking-[0.32em] mb-6">
           Private &amp; customised Nepal journeys since 2012
         </p>
-        <h1 className="text-display text-white text-5xl sm:text-5xl  md:text-8xl max-w-5xl text-balance">
+        <h1 className="text-display text-white text-5xl sm:text-5xl font-[900] max-w-5xl text-balance uppercase">
           Explore the <br />
           Himalaya with Into Nepal
         </h1>
@@ -40,7 +40,7 @@ const HeroSection = () => {
         </p>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-20 container mx-auto max-w-[1400px] px-4 pb-10 md:pb-14 translate-y-1/2">
+      <div className="absolute bottom-32 left-0 right-0 z-20 container mx-auto max-w-[1400px] px-4 pb-10 md:pb-14 translate-y-1/2">
         <form
           onSubmit={submitSearch}
           className="bg-canvas/95 backdrop-blur-md shadow-float rounded-sm border border-hairline p-2 flex items-stretch gap-2 w-full max-w-2xl mx-auto"

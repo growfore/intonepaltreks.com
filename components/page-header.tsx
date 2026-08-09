@@ -8,7 +8,7 @@ export default function PageHeader({
   subtitle?: React.ReactNode;
 }) {
   return (
-    <section className="bg-ink pt-16 md:pt-28 pb-14 md:pb-20">
+    <section className="bg-primary pt-16 md:pt-28 pb-14 md:pb-20">
       <div className="container mx-auto px-4 md:px-8 max-w-[1400px]">
         <div className="max-w-3xl">
           {eyebrow && (

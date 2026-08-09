@@ -139,13 +139,9 @@ export function Form_Component({ packages }: { packages: TPackageDetails[] }) {
 
   return (
     <main>
-      <section className="relative bg-ink text-white py-20 md:py-28 overflow-hidden">
+      <section className="relative bg-primary text-white py-20 md:py-28 overflow-hidden">
         <div
           className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(0deg,transparent,transparent 39px,currentColor 39px,currentColor 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,currentColor 39px,currentColor 40px)",
-          }}
         />
         <div className="container mx-auto relative z-10 text-center px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 -tracking-[1.44px]">
