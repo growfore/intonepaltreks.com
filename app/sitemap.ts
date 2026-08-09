@@ -58,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const data = await res.json();
     const items: Record<string, unknown>[] = data.data || [];
     trips = items.map((trip) => ({
-      url: `${baseUrl}/package/${trip.slug}`,
+      url: `${baseUrl}/trip/${trip.slug}`,
       lastModified: new Date((trip.updatedAt as string) || Date.now()),
       changeFrequency: "weekly" as const,
       priority: 0.9,

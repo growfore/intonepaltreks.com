@@ -15,11 +15,8 @@ export default async function FeaturedSections({
             <div key={index} className={index > 0 ? "mt-20" : ""}>
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                 <div className="max-w-2xl">
-                  <p className="text-[11px] uppercase tracking-[0.24em] text-link mb-4">
-                    Featured trips
-                  </p>
                   <h2 className="text-display text-4xl md:text-6xl text-ink text-balance">
-                    {name} <em className="italic font-light">favourites</em>.
+                    {name}
                   </h2>
                 </div>
                 {tag.description && (

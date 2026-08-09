@@ -4,7 +4,7 @@ import {
   LucideCircleQuestionMark,
   LucideDollarSign,
   LucideFileText,
-  LucideInfo,
+  LucideImages,
   LucideMap,
   LucideMapPin,
   LucideStar,
@@ -12,6 +12,7 @@ import {
   LucideX,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { slugify } from "@/lib/slugify";
 
 type Section = { id: string; label: string; icon: React.ReactNode };
@@ -29,7 +30,7 @@ const staticSections: Section[] = [
   { id: "map", label: "Map", icon: <LucideMap /> },
   { id: "inclusions", label: "Includes", icon: <LucideCheck /> },
   { id: "exclusions", label: "Excludes", icon: <LucideX /> },
-  // { id: "trip-info", label: "Trip Info", icon: <LucideInfo /> },
+  { id: "gallery", label: "Trip Photos", icon: <LucideImages/>}
 ];
 
 function buildSections(
@@ -62,8 +63,10 @@ function buildSections(
 
 export function SectionNavigation({
   additionalInfo,
+  slug,
 }: {
   additionalInfo?: { title: string; slug?: string }[];
+  slug?: string;
 }) {
   const sections = buildSections(additionalInfo);
 
@@ -180,16 +183,16 @@ export function SectionNavigation({
 
   return (
     <nav
-      className={`sticky top-0 z-40 bg-canvas border-b border-hairline transition-all duration-300 ease-in-out ${
+      className={`sticky top-0 z-40 bg-canvas border-b border-hairline transition-all duration-300 ease-in-out p-2 ${
         showNav
           ? "opacity-100 translate-y-0"
           : "opacity-0 -translate-y-full pointer-events-none"
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 flex items-center gap-6">
         <div
           ref={navScrollRef}
-          className="flex gap-1 overflow-x-auto scrollbar-hide py-2"
+          className="flex gap-6 overflow-x-auto scrollbar-hide flex-1"
         >
           {sections.map((section) => (
             <button
@@ -198,17 +201,27 @@ export function SectionNavigation({
                 buttonRefs.current[section.id] = el;
               }}
               onClick={() => handleNavClick(section.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs whitespace-nowrap rounded-full transition-colors ${
+              className={`relative whitespace-nowrap py-3.5 text-sm tracking-wide transition-colors ${
                 activeSection === section.id
-                  ? "bg-ink text-on-primary"
-                  : "text-body hover:text-ink hover:bg-canvas-soft"
+                  ? "text-ink font-semibold"
+                  : "text-mute hover:text-ink"
               }`}
             >
-              {section.icon}
-              {section.label}
+                {section.label}
+              {activeSection === section.id && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-link" />
+              )}
             </button>
           ))}
         </div>
+        {slug && (
+          <Link
+            href={`/booking?q=${slug}`}
+            className="hidden md:inline-flex shrink-0 items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-link hover:bg-link-deep transition-colors rounded-full"
+          >
+            Book Now
+          </Link>
+        )}
       </div>
     </nav>
   );

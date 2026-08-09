@@ -15,7 +15,7 @@ type Trip = {
   price: number;
   difficultyLevel: string;
   images: string[];
-  keywords: string[];
+  keywords?: string[];
 };
 
 export default function TripCard({ trip }: { trip: Trip }) {
@@ -32,7 +32,7 @@ export default function TripCard({ trip }: { trip: Trip }) {
     );
   };
 
-  const href = `/package/${trip.canonicalPath || trip.slug}`;
+  const href = `/trip/${trip.canonicalPath || trip.slug}`;
 
   return (
     <motion.div
@@ -46,7 +46,7 @@ export default function TripCard({ trip }: { trip: Trip }) {
             <Image
               key={imageIndex}
               src={images[imageIndex] ? getFullImageUrl(images[imageIndex]) : ""}
-              alt={trip.keywords[0] || title}
+              alt={trip.keywords?.[0] || title}
               width={600}
               height={450}
               unoptimized

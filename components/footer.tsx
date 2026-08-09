@@ -5,26 +5,26 @@ import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import Image from "next/image";
 import { getFooterItems } from "@/lib/api";
 
+export const socials = [
+  {
+    name: "Facebook",
+    url: siteConfig.socials.facebook,
+    icon: <FaFacebook className="size-4" />,
+  },
+  {
+    name: "Instagram",
+    url: siteConfig.socials.instagram,
+    icon: <FaInstagram className="size-4" />,
+  },
+  {
+    name: "WhatsApp",
+    url: `https://wa.me/${siteConfig.whatsAppNumber}`,
+    icon: <FaWhatsapp className="size-4" />,
+  },
+];
 export default async function Footer() {
   const footerItems = await getFooterItems();
 
-  const socials = [
-    {
-      name: "Facebook",
-      url: siteConfig.socials.facebook,
-      icon: <FaFacebook className="size-4" />,
-    },
-    {
-      name: "Instagram",
-      url: siteConfig.socials.instagram,
-      icon: <FaInstagram className="size-4" />,
-    },
-    {
-      name: "WhatsApp",
-      url: `https://wa.me/${siteConfig.whatsAppNumber}`,
-      icon: <FaWhatsapp className="size-4" />,
-    },
-  ];
 
   return (
     <footer className="bg-ink text-canvas/90">

@@ -7,16 +7,16 @@
 
 @theme inline {
     --font-sans: var(--font-sans);
-    --font-display: var(--font-serif);
-    --font-serif: var(--font-serif);
+    --font-display: var(--font-sans);
+    --font-serif: var(--font-sans);
 
     /* Into Nepal Treks color tokens */
     --color-canvas: #ffffff;
     --color-canvas-soft: #f2f2f2;
     --color-canvas-soft-2: #f3f4f6;
-    --color-ink: #1f2528;
+    --color-ink: #000000;
     --color-body: #000000;
-    --color-mute: #6b7280;
+    --color-mute: #000000;
     --color-hairline: #e5e7eb;
     --color-hairline-strong: #d1d5db;
     --color-link: #0f77be;
@@ -114,13 +114,13 @@
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Display heading treatment (serif, tight, editorial) */
+/* Display heading treatment (Montserrat, heavy, tight) */
 @layer utilities {
     .text-display {
         font-family: var(--font-serif);
-        font-weight: 400;
+        font-weight: 600;
         letter-spacing: -0.02em;
-        line-height: 1;
+        line-height: 1.05;
     }
     .gradient-hero {
         background: var(--gradient-hero);
@@ -145,6 +145,40 @@
 /* Rich text content rendered from CMS HTML */
 .rich-text {
     @apply leading-relaxed;
+}
+.include-exclude-list ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.include-exclude-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.375rem;
+}
+.include-exclude-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.35em;
+    width: 1rem;
+    height: 1rem;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+.include-exclude-list--include li::before {
+    background-color: var(--color-success);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+.include-exclude-list--exclude li::before {
+    background-color: #e0526a;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
 }
 .rich-text > * + * {
     @apply mt-4;

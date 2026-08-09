@@ -10,7 +10,8 @@ import Image from "next/image";
 import { getFullImageUrl } from "@/lib/getFullImageUrl";
 
 export function BlogCard({ blog }: any) {
-  const { title, slug, content, coverImage, createdAt } = blog;
+  const { title, slug, content, coverImage, createdAt, metaDescription } = blog;
+  const excerpt = metaDescription || content;
 
   const formattedDate = new Date(createdAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -41,12 +42,14 @@ export function BlogCard({ blog }: any) {
         </CardHeader>
 
         <CardContent className="pb-2 flex-1">
-          <p
-            className="text-sm text-body line-clamp-3"
-            dangerouslySetInnerHTML={{
-              __html: content.substring(0, 250) + "...",
-            }}
-          />
+          {excerpt && (
+            <p
+              className="text-sm text-body line-clamp-3"
+              dangerouslySetInnerHTML={{
+                __html: excerpt.substring(0, 250) + "...",
+              }}
+            />
+          )}
         </CardContent>
 
         <CardFooter className="pt-3 pb-3 flex items-center justify-between text-xs text-mute">

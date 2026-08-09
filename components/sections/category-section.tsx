@@ -38,7 +38,7 @@ export default function CategorySection() {
         eyebrow="Ways to travel"
         title={
           <>
-            Find your path in the <em className="italic font-light">Himalayas</em>.
+            Find your path in the Himalayas.
           </>
         }
         subtitle="Selected experiences curated for the soul of the adventurer."

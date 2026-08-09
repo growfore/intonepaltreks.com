@@ -25,8 +25,9 @@ export interface TripData {
   travelStyle: string;
   locations: string[];
   images: string[];
-  itinerary: ItineraryDay[];
-  faqs: FAQ[];
+  keywords?: string[];
+  itinerary: ItineraryVariant[];
+  faqs: FAQGroup[];
   highlights: string[];
   inclusions: string[];
   exclusions: string[];
@@ -46,11 +47,26 @@ export interface ItineraryDay {
   highlights?: string[];
   meals?: string[];
   accommodations?: string[];
+  dayFeaturedImages?: { image: string; alt?: string }[];
+}
+
+export interface ItineraryVariant {
+  id: string;
+  name: string;
+  isDefault?: boolean;
+  description?: string;
+  days: ItineraryDay[];
 }
 
 export interface FAQ {
   question: string;
   answer: string;
+}
+
+export interface FAQGroup {
+  category: string;
+  icon?: string;
+  faqs: FAQ[];
 }
 
 export interface AdditionalInfo {

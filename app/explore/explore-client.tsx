@@ -26,10 +26,10 @@ function parseDuration(duration: string): number | null {
 type TripItem = { id: string; title: string; slug: string; canonicalPath?: string; duration: string; price: number; difficultyLevel: string; images: string[]; keywords: string[] };
 type CategoryItem = { id: string; categoryHandle: string; categoryName: string; categoryImage: string | null };
 
-export default function ExploreClient({ trips: initialTrips, categories, initialCategory }: { trips: TripItem[]; categories: CategoryItem[]; initialCategory?: string }) {
+export default function ExploreClient({ trips: initialTrips, categories, initialCategory, initialSearch }: { trips: TripItem[]; categories: CategoryItem[]; initialCategory?: string; initialSearch?: string }) {
   const router = useRouter();
   const [categoryTrips, setCategoryTrips] = useState<TripItem[] | null>(null);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch ?? "");
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
   const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>(
@@ -124,22 +124,34 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
 
   return (
     <div className="min-h-screen bg-canvas-soft">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold -tracking-[1.44px] text-ink">
-              Explore Trips
-            </h1>
-          </div>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="flex items-center gap-2 text-sm text-body hover:text-ink transition-colors md:hidden"
+      <div className="bg-canvas border-b border-hairline">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 pt-14 md:pt-20 pb-10">
+          <h1 className="mt-3 font-display text-4xl md:text-6xl text-ink leading-[1.05]">
+            Find Your Next Adventure
+          </h1>
+          <p className="mt-4 max-w-xl text-base md:text-lg text-mute">
+            Browse our complete collection of Nepal trekking adventures — from
+            Annapurna to Everest, find the perfect Himalayan trek for your
+            skill level and schedule.
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            className="relative mt-8 max-w-xl"
           >
-            <LucideSlidersHorizontal className="size-4" />
-            Filters
-          </button>
+            <LucideSearch className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-mute" />
+            <Input
+              placeholder="Search trips by name or keyword..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-12 h-12 text-base border-hairline bg-canvas shadow-card rounded-sm"
+            />
+          </form>
         </div>
+      </div>
 
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
         <div className="flex gap-8 relative">
           {/* Sidebar */}
           <aside
@@ -285,25 +297,19 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
 
           {/* Main content */}
           <div className="flex-1 min-w-0">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              className="relative mb-8"
-            >
-              <LucideSearch className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-mute" />
-              <Input
-                placeholder="Search trips by name or keyword..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-11 h-12 text-base border-hairline bg-canvas"
-              />
-            </form>
-
-            <p className="text-sm text-body mb-6">
-              {filtered.length}{" "}
-              {filtered.length === 1 ? "trip" : "trips"} found
-            </p>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm text-body">
+                {filtered.length}{" "}
+                {filtered.length === 1 ? "trip" : "trips"} found
+              </p>
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="flex items-center gap-2 text-sm text-body hover:text-ink transition-colors md:hidden"
+              >
+                <LucideSlidersHorizontal className="size-4" />
+                Filters
+              </button>
+            </div>
 
             {filtered.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">

@@ -9,8 +9,8 @@ export default function WelcomeSection() {
     <Section className="bg-canvas">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
         <div className="md:col-span-7">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-link mb-4">
-            Our story
+          <p className="text-[11px] uppercase tracking-[0.24em] text-link mb-4 pl-2">
+              Our story
           </p>
           <h2 className="text-display text-4xl md:text-6xl text-ink text-balance mb-8">
             Explore the Himalaya <br className="hidden md:block" /> with{" "}

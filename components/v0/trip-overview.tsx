@@ -11,8 +11,10 @@ import {
   LucideBus,
   LucideHandPlatter,
   LucideSunMoon,
+  LucideHotel,
+  LucidePlane,
+  LucideHamburger,
 } from "lucide-react";
-import PricingCardSidebar from "@/components/card/pricing-card";
 
 interface TripOverviewProps {
   trip: TripData;
@@ -25,7 +27,7 @@ export function TripOverview({ trip }: TripOverviewProps) {
         <div className="text-sm font-semibold uppercase tracking-widest text-mute mb-4">
           At a Glance
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-6 bg-canvas border border-hairline p-6 rounded-2xl">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-6 bg-amber-50 p-6 rounded-sm">
           {/* Duration */}
           {trip.duration && (
             <GlanceItem
@@ -63,7 +65,7 @@ export function TripOverview({ trip }: TripOverviewProps) {
             />
           )}
 
-          {trip.maxAltitude && (
+          {trip.maximumAltitude && (
             <GlanceItem
               text="Max Altitude"
               icon={LucideMountain}
@@ -74,7 +76,7 @@ export function TripOverview({ trip }: TripOverviewProps) {
           {trip.accommodations && (
             <GlanceItem
               text="Accommodations"
-              icon={LucideTentTree}
+              icon={LucideHotel}
               value={trip.accommodations.join(", ") ?? "-"}
             />
           )}
@@ -82,14 +84,14 @@ export function TripOverview({ trip }: TripOverviewProps) {
           {trip.transportation && (
             <GlanceItem
               text="Transportation"
-              icon={LucideBus}
+              icon={LucidePlane}
               value={trip?.transportation ?? "-"}
             />
           )}
           {trip.meals && (
             <GlanceItem
               text="Meals"
-              icon={LucideHandPlatter}
+              icon={LucideHamburger}
               value={trip?.meals ?? "-"}
             />
           )}
@@ -109,15 +111,6 @@ export function TripOverview({ trip }: TripOverviewProps) {
             />
           )}
         </div>
-      </div>
-
-      <div className="md:hidden">
-        <PricingCardSidebar
-          slug={trip.slug}
-          title={trip.title}
-          price={trip.price}
-          maxPrice={trip.maxPrice}
-        />
       </div>
     </div>
   );

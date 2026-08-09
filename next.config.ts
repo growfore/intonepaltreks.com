@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
         : []),
       {
         protocol: "https",
-        hostname: "api.essencetreksnepal.com",
+        hostname: "api.intonepaltreks.com",
         pathname: "/**",
       },
       {

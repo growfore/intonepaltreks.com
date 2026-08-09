@@ -18,7 +18,7 @@ const HeroSection = () => {
   return (
     <section className="relative h-[92vh] min-h-[640px] w-full overflow-hidden">
       <Image
-        src="/images/adventure-sports.jpg"
+        src="/images/tilicho.jpg"
         alt="Himalayan adventure"
         fill
         priority
@@ -30,9 +30,9 @@ const HeroSection = () => {
         <p className="text-white/90 text-[11px] uppercase tracking-[0.32em] mb-6">
           Private &amp; customised Nepal journeys since 2012
         </p>
-        <h1 className="text-display text-white text-5xl sm:text-7xl md:text-8xl lg:text-[8rem] max-w-5xl text-balance">
+        <h1 className="text-display text-white text-5xl sm:text-5xl  md:text-8xl max-w-5xl text-balance">
           Explore the <br />
-          <em className="italic font-light">Himalaya</em> with Into Nepal
+          Himalaya with Into Nepal
         </h1>
         <p className="text-white/85 text-base md:text-lg max-w-xl mt-6 md:mt-8 mb-10 text-balance px-4">
           Hand-crafted treks and tours across Nepal — designed by certified
@@ -51,7 +51,7 @@ const HeroSection = () => {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search by trip name, e.g. 'Everest Base Camp'"
-              className="flex-1 bg-transparent outline-none text-ink placeholder:text-mute/70 text-sm"
+              className="flex-1 bg-transparent outline-none text-ink placeholder:text-mute text-sm"
             />
           </div>
           <button

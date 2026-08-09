@@ -1,9 +1,11 @@
 import {
-  LucideCheckCircle2,
+  LucideArrowLeft,
   LucideInfo,
   LucidePlayCircle,
-  LucideXCircle,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 export async function generateStaticParams() {
@@ -15,7 +17,6 @@ export async function generateStaticParams() {
   return trips.map((trip) => ({ slug: trip.slug }));
 }
 import ImageGallery from "@/components/image-gallery";
-import PricingCardSidebar from "@/components/card/pricing-card";
 import { AdditionalInfoRenderer } from "@/components/additional-info-renderer";
 import { TripFaqs } from "@/components/v0/trip-faqs";
 import { TripItinerary } from "@/components/v0/trip-itinerary";
@@ -24,14 +25,15 @@ import { decodeHtmlEntities } from "@/lib/html-decoder";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
-import TripAdvisorRatingBadge from "@/components/tripadvisor-rating-badge";
-import GoogleRatingBadge from "@/components/google-rating-badge";
-import { Separator } from "@/components/ui/separator";
 import { SectionNavigation } from "@/components/section-nav";
+import { TripHeaderDescription } from "@/components/trip-header-description";
+import { IncludeExcludeCard } from "@/components/include-exclude-card";
 import { BottomBookingBar } from "@/components/bottom-booking-bar";
+import PricingCardSidebar from "@/components/card/pricing-card";
 import { safeParseSchema } from "@/lib/safeParseSchema";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl, imageUrl } from "@/lib/seo";
+import { getFullImageUrl } from "@/lib/getFullImageUrl";
 
 export async function generateMetadata({
   params,
@@ -48,7 +50,7 @@ export async function generateMetadata({
     const redirectedSlug = res.url.split("/slug/")[1];
 
     if (redirectedSlug && redirectedSlug !== param.slug) {
-      redirect(`/package/${redirectedSlug}`);
+      redirect(`/trip/${redirectedSlug}`);
     }
 
     return notFound();
@@ -71,7 +73,7 @@ export async function generateMetadata({
     description: description,
     keywords: trip.keywords?.join(", ") || undefined,
     alternates: {
-      canonical: `${siteConfig.url}/package/${trip.slug}`,
+      canonical: `${siteConfig.url}/trip/${trip.slug}`,
     },
     openGraph: {
       title: title,
@@ -115,7 +117,7 @@ export default async function TripPage({
     const redirectedSlug = res.url.split("/slug/")[1];
 
     if (redirectedSlug && redirectedSlug !== slug) {
-      redirect(`/package/${redirectedSlug}`);
+      redirect(`/trip/${redirectedSlug}`);
     }
 
     return notFound();
@@ -217,27 +219,39 @@ export default async function TripPage({
           }}
         ></Script>
       )}
-      <ImageGallery images={trip.images} keywords={trip.keywords || []} />
-
-      <div className="container mx-auto py-6 md:py-10 px-4 md:px-0">
-        <h1 className="text-3xl md:text-4xl font-bold -tracking-[1.44px] text-ink mb-4">
-          {trip.title}
-        </h1>
-        <div className="flex items-center gap-2">
-          {/*Rated {siteConfig.reviews.tripadvisor.rating}/5 in Tripadvisor*/}
-          <div className="flex flex-row flex-wrap items-center gap-2 md:gap-4">
-            <GoogleRatingBadge />
-            <Separator orientation="vertical" className="h-4 md:h-6" />
-            <TripAdvisorRatingBadge light />
+      {/* Split header */}
+      <section className="grid lg:grid-cols-2 bg-canvas">
+        <div className="relative aspect-[4/3]">
+          <Image
+            src={getFullImageUrl(trip.images[0])}
+            alt={trip.title}
+            fill
+            priority
+            sizes="50vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent lg:bg-none" />
+        </div>
+        <div className="flex items-center">
+          <div className="w-full px-5 py-12 md:px-10 lg:px-14 xl:px-20">
+            {trip.locations && trip.locations.length > 0 && (
+              <p className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-mute">
+                {trip.locations.join(" / ")}
+              </p>
+            )}
+            <h1 className="mt-3 text-4xl md:text-5xl xl:text-6xl font-display text-ink leading-[1.05]">
+              {trip.title}
+            </h1>
+            <TripHeaderDescription html={trip.shortDescription} />
           </div>
         </div>
-      </div>
+      </section>
 
       {/*Content starts */}
-      <SectionNavigation additionalInfo={trip.additionalInfo} />
+      <SectionNavigation additionalInfo={trip.additionalInfo} slug={slug} />
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-12 min-w-0">
-          <div className="col-span-3 min-w-0!">
+        <div className="grid gap-12 min-w-0 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="min-w-0!">
             <TripOverview trip={trip} />
             <div
               className="col-span-2
@@ -252,7 +266,7 @@ export default async function TripPage({
              prose-a:text-primary prose-a:underline
              prose-strong:text-ink prose-strong:font-bold
              prose-ul:my-2 prose-ol:my-2
-             prose-li:text-ink/70 prose-li:mb-1
+             prose-li:text-ink prose-li:mb-1
              prose-blockquote:border-l-4 prose-blockquote:border-primary/70 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-mute
              prose-img:rounded-2xl prose-img:my-6
              prose-code:bg-canvas-soft-2 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
@@ -273,12 +287,6 @@ export default async function TripPage({
              **:wrap-break-word
                    "
             >
-              <div
-                className="mt-4"
-                dangerouslySetInnerHTML={{
-                  __html: decodeHtmlEntities(trip.shortDescription),
-                }}
-              />
               <div
                 id="highlights"
                 dangerouslySetInnerHTML={{
@@ -320,39 +328,18 @@ export default async function TripPage({
                 </>
               )}
 
-              <div>
-                <h2
-                  id="inclusions"
-                  className="flex gap-4 items-center scroll-mt-28"
-                >
-                  <LucideCheckCircle2 /> Inclusions
-                </h2>
-                <div
-                  id="inclusions"
-                  dangerouslySetInnerHTML={{
-                    __html: decodeHtmlEntities(trip.inclusions[0]),
-                  }}
-                  className="bg-canvas border border-hairline w-full mt-4 rounded-2xl p-6
-                    prose-li:before:mask-[url('/icons/greentick.png')]
-                    prose-li:before:rotate-360
-                    [&_ol_li]:before:content-none [&_ol_li]:pl-0
-                     "
-                />
-              </div>
-
-              <div>
-                <h2
+              <div className="space-y-6 grid  md:grid-cols-2 mt-12 bg-canvas">
+                <div className="border-r">
+                  <IncludeExcludeCard
+                    variant="include"
+                    id="inclusions"
+                    html={trip.inclusions[0]}
+                  />
+                </div>
+                <IncludeExcludeCard
+                  variant="exclude"
                   id="exclusions"
-                  className="flex gap-4 items-center text-error-deep! scroll-mt-28"
-                >
-                  <LucideXCircle className="text-error-deep" /> Exclusions{" "}
-                </h2>
-                <div
-                  id="exclusions"
-                  dangerouslySetInnerHTML={{
-                    __html: decodeHtmlEntities(trip.exclusions[0]),
-                  }}
-                  className="w-full bg-error-soft/60 border border-error/20 rounded-2xl p-6 mt-4 prose-li:before:mask-[url('/icons/cross.png')] [&_ol_li]:before:content-none [&_ol_li]:pl-0"
+                  html={trip.exclusions[0]}
                 />
               </div>
 
@@ -362,7 +349,7 @@ export default async function TripPage({
                     id="trip-info"
                     className="font-bold my-4 flex items-center gap-2 scroll-mt-28"
                   >
-                    <LucideInfo className="size-8" /> Trip Information
+                    <LucideInfo className="size-8" /> More Information
                   </h2>
                   {trip.additionalInfo.map((info: any, idx: any) => {
                     return (
@@ -376,22 +363,35 @@ export default async function TripPage({
                 </>
               )}
               <div id="faqs">
-                {trip.faqs && trip.faqs.length > 1 && <TripFaqs trip={trip} />}
+                {trip.faqs && trip.faqs.length > 0 && <TripFaqs trip={trip} />}
               </div>
             </div>
           </div>
-          <div className="col-span-1 hidden md:block">
-            <div className="sticky top-32">
+          <aside className="hidden lg:block">
+            <div className="sticky top-16">
               <PricingCardSidebar
-                slug={slug}
-                title={trip.title}
                 price={trip.price}
                 maxPrice={trip.maxPrice}
+                slug={slug}
+                title={trip.title}
               />
             </div>
-          </div>
+          </aside>
         </div>
       </div>
+      <section className="py-16 md:py-24" id="gallery">
+        <div className="container mx-auto px-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mute">
+            Gallery
+          </p>
+          <h2 className="mt-2 font-display text-3xl md:text-4xl text-ink">
+            Photos from the trail
+          </h2>
+        </div>
+        <div className="mt-8">
+          <ImageGallery images={trip.images} keywords={trip.keywords || []} />
+        </div>
+      </section>
       <BottomBookingBar price={trip.price} slug={slug} title={trip.title} />
     </main>
   );

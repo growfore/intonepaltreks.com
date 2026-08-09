@@ -54,7 +54,7 @@ export async function FeaturedTrip() {
 
             <div className="mt-8">
               <Link
-                href={`/package/${activity.slug}`}
+                href={`/trip/${activity.slug}`}
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-on-primary shadow-lg transition-colors hover:bg-primary/90"
               >
                 Explore Trip

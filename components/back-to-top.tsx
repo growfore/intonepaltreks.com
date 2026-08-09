@@ -10,7 +10,7 @@ export default function BackToTop() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (pathname.startsWith("/package/")) return;
+    if (pathname.startsWith("/trip/")) return;
 
     const handleScroll = () => {
       setShow(window.scrollY > 500);
@@ -20,7 +20,7 @@ export default function BackToTop() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname]);
 
-  if (pathname.startsWith("/package/")) return null;
+  if (pathname.startsWith("/trip/")) return null;
 
   return (
     show && (

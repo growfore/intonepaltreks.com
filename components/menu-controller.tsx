@@ -10,12 +10,13 @@ import {
 } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Award, ChevronDown, Mail, LucidePlusCircle, Search } from "lucide-react";
+import { Award, ChevronDown, Mail, LucidePlusCircle, Search, LucideHeadset } from "lucide-react";
 import { MobileMenu } from "./mobile-menu";
 import { siteConfig } from "@/lib/siteConfig";
 import Logo from "./logo";
 import { BsWhatsapp } from "react-icons/bs";
 import { Button } from "./ui/button";
+import { socials } from "./footer";
 
 type MenuItem = {
   id: string;
@@ -77,15 +78,8 @@ export function MenuController({ items }: MenuControllerProps) {
   }, [cancelHide]);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-      lastScrollY = currentScrollY;
+      setIsVisible(window.scrollY <= 80);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -123,22 +117,26 @@ export function MenuController({ items }: MenuControllerProps) {
         <div className="mx-auto max-w-[1400px] px-4 md:px-8">
           <div className="py-2.5 flex items-center justify-between text-sm text-body">
             <div className="flex items-center gap-2">
-              <Award className="size-4 text-link" />
+              <LucideHeadset/>
               <span className="text-mute font-medium">
-                {siteConfig.experience} of Himalayan Expertise
+                Contact us {siteConfig.phoneNumbers[0].phone} (24 Hours Support)
               </span>
             </div>
             <div className="flex items-center gap-6">
-              <Link
-                href={`https://api.whatsapp.com/send/?phone=${siteConfig.whatsAppNumber}&type=phone_number&app_absent=0`}
-                target="_blank"
-                className="flex items-center gap-2 hover:text-green-600 transition-colors"
-              >
-                <BsWhatsapp className="size-4 text-green-600" />
-                <span className="font-medium">
-                  {siteConfig.phoneNumbers[0].phone}
-                </span>
-              </Link>
+              <div className="flex items-center gap-3 ">
+                {socials.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className="w-9 h-9 rounded-full border border-canvas/20 flex items-center justify-center hover:bg-link hover:border-link transition-colors"
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
               <span className="text-hairline-strong">|</span>
               <Link
                 href={`mailto:${siteConfig.email}`}
@@ -158,6 +156,7 @@ export function MenuController({ items }: MenuControllerProps) {
       >
         <div className="flex items-center gap-2">
           <Logo />
+          {items.map((item) => {
             const itemHasGrandchildren = hasGrandchildren(item);
             const isActive = activeMega === item.id;
             return (
@@ -176,7 +175,7 @@ export function MenuController({ items }: MenuControllerProps) {
                     className={`inline-flex items-center gap-1 px-3 py-1.5 text-sm  font-bold uppercase tracking-wider transition-colors ${
                       isActive
                         ? "text-ink bg-canvas-soft"
-                        : "text-ink/80 hover:text-ink hover:bg-canvas-soft"
+                        : "text-ink hover:text-ink hover:bg-canvas-soft"
                     }`}
                   >
                     {item.label}
@@ -185,7 +184,7 @@ export function MenuController({ items }: MenuControllerProps) {
                 ) : (
                   <Link
                     href={item.url || "#"}
-                    className="inline-flex items-center px-3 py-1.5 text-sm font-bold uppercase tracking-wider text-ink/80 hover:text-ink transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 text-sm font-bold uppercase tracking-wider text-ink hover:text-ink transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -194,6 +193,21 @@ export function MenuController({ items }: MenuControllerProps) {
             );
           })}
         </div>
+
+        {pathname !== "/" && (
+          <form
+            onSubmit={onSearch}
+            className="hidden xl:flex flex-1 max-w-sm mx-auto items-center gap-2 px-4 py-2 rounded-sm border border-hairline bg-canvas-soft focus-within:border-link transition-colors"
+          >
+            <Search className="w-4 h-4 text-mute shrink-0" />
+            <input
+              value={searchQ}
+              onChange={(e) => setSearchQ(e.target.value)}
+              placeholder="Search trips by name…"
+              className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-mute"
+            />
+          </form>
+        )}
 
         <div className="flex items-center gap-2 md:gap-4">
           <Link href="/design-your-trip" className="hidden md:inline-flex">
@@ -220,7 +234,7 @@ export function MenuController({ items }: MenuControllerProps) {
         >
           <div className="h-16" aria-hidden="true" />
           {activeMegaItem && hasActiveGrandchildren && (
-            <div className="bg-canvas border border-hairline rounded-lg pointer-events-auto shadow-[0px_2px_2px_#0000000a,0px_8px_16px_-4px_#0000000a]">
+            <div className="bg-canvas border border-hairline rounded-sm pointer-events-auto shadow-[0px_2px_2px_#0000000a,0px_8px_16px_-4px_#0000000a]">
               <div className="max-w-[1400px] mx-auto px-4 md:px-8">
                 <div className="flex">
                   <div className="w-[240px] shrink-0 py-6 pr-6 border-r border-hairline">

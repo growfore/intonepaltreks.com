@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { Navigation } from "@/components/navigation";
 import { Analytics } from "@vercel/analytics/next";
-import { dmSans, cormorant } from "@/lib/font";
+import { montserrat } from "@/lib/font";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl } from "@/lib/seo";
 import Footer from "@/components/footer";
@@ -88,7 +88,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${cormorant.variable}`}>
+    <html lang="en" className={`${montserrat.variable}`}>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id="
         strategy="afterInteractive"

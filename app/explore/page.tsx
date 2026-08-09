@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 export default async function ExplorePage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; q?: string }>;
 }) {
   const params = await searchParams;
   const [tripsRes, categoriesRes] = await Promise.all([
@@ -62,5 +62,5 @@ export default async function ExplorePage({
   const trips = tripsJSON.data ?? [];
   const categories = categoriesJSON.data?.tripCategories ?? [];
 
-  return <ExploreClient trips={trips} categories={categories} initialCategory={params.category ?? ""} />;
+  return <ExploreClient trips={trips} categories={categories} initialCategory={params.category ?? ""} initialSearch={params.q ?? ""} />;
 }

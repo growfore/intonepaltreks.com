@@ -25,18 +25,18 @@ export function BottomBookingBar({ price, slug }: BottomBookingBarProps) {
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 bg-canvas border-t border-hairline z-50 md:hidden transition-transform duration-300 ${
+      className={`fixed bottom-0 left-0 right-0 bg-ink border-t border-white/10 z-50 md:hidden transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "translate-y-full"
       }`}
     >
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
         <div className="flex flex-col">
-          <span className="text-xs text-mute line-clamp-1 max-w-[200px]">
-            Start from <span className="font-semibold text-ink">US ${price}</span> /person
+          <span className="text-xs text-white/60">
+            Start from <span className="font-semibold text-white">US ${price}</span> /person
           </span>
         </div>
         <Link href={"/booking?q=" + slug}>
-          <Button>
+          <Button className="bg-link hover:bg-link-deep">
             <LucideSend className="size-4" />
             Book Now
           </Button>

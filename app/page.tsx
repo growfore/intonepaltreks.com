@@ -60,10 +60,10 @@ export default async function Homepage() {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-ink mb-4">
             Something went wrong
           </h1>
-          <p className="text-gray-600">
+          <p className="text-mute">
             Failed to load content. Please try again later.
           </p>
         </div>
@@ -81,7 +81,7 @@ export default async function Homepage() {
   return (
     <>
       <HeroSection />
-      <div className="h-32 md:h-24" />
+      <div className="h-32 md:h-24 bg-canvas"  />
       <CategorySection />
       <FeaturedSections featuredTags={firstFeatured} />
       <WelcomeSection />
