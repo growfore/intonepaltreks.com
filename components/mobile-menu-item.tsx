@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 
 type MenuItem = {
   id: string;
   label: string;
   url: string;
   children: MenuItem[];
+  viewAllUrl?: string;
 };
 
 interface MobileMenuItemProps {
@@ -71,6 +72,16 @@ export function MobileMenuItem({
               onNavigate={onNavigate}
             />
           ))}
+          {item.viewAllUrl && (
+            <Link
+              href={item.viewAllUrl}
+              onClick={handleLinkClick}
+              className="flex items-center gap-1.5 px-4 py-3 text-sm font-medium text-link hover:text-link-deep transition-colors"
+            >
+              View all {item.label} trips
+              <ArrowRight size={14} />
+            </Link>
+          )}
         </div>
       )}
     </div>

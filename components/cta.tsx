@@ -1,64 +1,129 @@
-"use client";
-
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+import Image from "next/image";
+import { Check } from "lucide-react";
+import { apiFetch } from "@/lib/api";
+import { getFullImageUrl } from "@/lib/getFullImageUrl";
 
-const FADE_IN_ANIMATION_VARIANTS: Variants = {
-  hidden: { opacity: 0, y: 10 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 100, damping: 20 },
-  },
-};
+const features = [
+  "Expert local guides",
+  "Fully customisable itinerary",
+  "Plan what you include yourself",
+];
 
-export default function Cta() {
+export default async function Cta() {
+  let members: { name: string; image?: string }[] = [];
+  try {
+    const res = await apiFetch("/team", { next: { revalidate: 3600 } });
+    const json = await res.json();
+    members = Object.values(json.data as Record<string, { name: string; image?: string }[]>)
+      .flat()
+      .filter((m) => m.image)
+      .slice(0, 3);
+  } catch {
+    // ponytail: degrade to text-only CTA if team fetch fails
+  }
+
   return (
-    <section className="bg-link text-white py-20 md:py-28">
-      <div className="container mx-auto max-w-4xl px-4 md:px-8 text-center">
-        <motion.h1
-          initial="hidden"
-          animate="show"
-          variants={{
-            hidden: {},
-            show: { transition: { staggerChildren: 0.08 } },
-          }}
-          className="text-display text-5xl md:text-7xl text-balance"
-        >
-          {"Let's plan your Nepal adventure".split(" ").map((word, i) => (
-            <motion.span
-              key={i}
-              variants={FADE_IN_ANIMATION_VARIANTS}
-              className="inline-block"
-            >
-              {word}&nbsp;
-            </motion.span>
-          ))}
-        </motion.h1>
+    <section className=" text-white py-20 md:py-28 bg-link">
+      <div className="container mx-auto max-w-6xl px-4 md:px-8 ">
+        <div className="grid items-center gap-12 md:grid-cols-2">
+          {members.length > 0 ? (
+            members.length === 3 ? (
+              <div className="grid grid-cols-2 gap-4">
+                <Image
+                  src={getFullImageUrl(members[0].image!)}
+                  alt={members[0].name}
+                  width={600}
+                  height={900}
+                  unoptimized
+                  className="aspect-[2/3] w-full object-cover rounded-md"
+                />
+                <div className="flex flex-col gap-4 -mt-10">
+                  {members.slice(1).map((member) => (
+                    <Image
+                      key={member.name}
+                      src={getFullImageUrl(member.image!)}
+                      alt={member.name}
+                      width={600}
+                      height={600}
+                      unoptimized
+                      className="aspect-square w-full object-cover rounded-md"
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div
+                className={
+                  members.length === 1
+                    ? "flex items-center justify-center"
+                    : "grid grid-cols-2 gap-4"
+                }
+              >
+                {members.map((member) => (
+                  <Image
+                    key={member.name}
+                    src={getFullImageUrl(member.image!)}
+                    alt={member.name}
+                    width={600}
+                    height={800}
+                    unoptimized
+                    className={
+                      members.length === 1
+                        ? "w-full h-auto max-h-[480px] object-cover rounded-md shadow-card"
+                        : "aspect-[3/4] w-full object-cover rounded-md"
+                    }
+                  />
+                ))}
+              </div>
+            )
+          ) : (
+            <Image
+              src="/images/guide.jpg"
+              alt="Into Nepal Treks guide"
+              width={600}
+              height={400}
+              unoptimized
+              className="w-full h-auto max-h-[480px] object-cover rounded-md shadow-card"
+            />
+          )}
 
-        <motion.p
-          initial="hidden"
-          animate="show"
-          variants={FADE_IN_ANIMATION_VARIANTS}
-          transition={{ delay: 0.4 }}
-          className="mt-6 max-w-xl mx-auto text-lg text-white/80"
-        >
-          Tell us what you dream of — Annapurna, Everest, or a fully custom
-          itinerary — and our local guides will craft the perfect adventure.
-        </motion.p>
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl md:text-6xl text-balance font-bold">
+              Tailor your trip <span className="font-script text-tomato">with experts.</span>
+            </h2>
+            <p className="mt-5 text-lg text-white font-medium">
+              Tell us what you dream of and our local guides will craft the
+              perfect adventure — your dates, your budget, your pace.
+            </p>
 
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={FADE_IN_ANIMATION_VARIANTS}
-          transition={{ delay: 0.5 }}
-        >
-          <Link href="/booking">
-            <button className="mt-10 rounded-sm bg-canvas px-10 py-4 text-sm font-semibold tracking-wide text-ink shadow-float transition-colors hover:bg-canvas/90">
-              Book Your Trip
-            </button>
-          </Link>
-        </motion.div>
+            <ul className="mt-8 space-y-3">
+              {features.map((feature) => (
+                <li key={feature} className="flex items-center gap-3">
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/15">
+                    <Check className="size-3.5" />
+                  </span>
+                  <span className="text-md text-white/90 font-medium">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-wrap items-center justify-center md:justify-start gap-4">
+              <Link
+                href="/contact"
+                className="rounded-sm bg-canvas px-8 py-4 text-sm font-semibold tracking-wide text-ink shadow-float transition-colors hover:bg-canvas/90"
+              >
+                Contact Us
+              </Link>
+              <Link
+                href="/design-your-trip"
+                className="rounded-sm border border-white/40 px-8 py-4 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-white/10"
+              >
+                Design Your Trip
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

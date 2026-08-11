@@ -6,11 +6,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans: var(--font-sans);
-    --font-display: var(--font-sans);
+    --font-sans: var(--font-livvic);
+    --font-display: var(--font-livvic);
     --font-serif: var(--font-sans);
+    --font-script: var(--font-script);
 
     /* Into Nepal Treks color tokens */
+    --color-tomato: #F0534E;
     --color-canvas: #ffffff;
     --color-canvas-soft: #f2f2f2;
     --color-canvas-soft-2: #f3f4f6;
@@ -104,12 +106,13 @@
 :root {
     --background: #f2f2f2;
     --foreground: #1f2528;
+    --tomato: #F0534E;
 
     /* Editorial design tokens */
     --shadow-card: 0 8px 30px -12px rgb(15 119 190 / 0.18);
     --shadow-soft: 0 2px 12px -4px rgb(15 119 190 / 0.1);
     --shadow-float: 0 20px 60px -20px rgb(15 119 190 / 0.3);
-    --gradient-hero: linear-gradient(180deg, rgb(0 0 0 / 0.1) 0%, rgb(0 0 0 / 0.55) 100%);
+    --gradient-hero: linear-gradient(180deg, rgb(15 119 190 / 0.35) 0%, rgb(15 119 190 / 0.12) 45%, rgb(0 0 0 / 0.55) 100%);
     --gradient-card: linear-gradient(180deg, transparent 50%, rgb(0 0 0 / 0.75) 100%);
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -282,4 +285,20 @@
 
 .animate-marquee-reverse {
     animation: marquee 40s linear infinite reverse;
+}
+
+/* Always-visible scrollbar (macOS hides overlay scrollbars by default) */
+.scrollbar-visible {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 0 0 / 0.35) transparent;
+}
+.scrollbar-visible::-webkit-scrollbar {
+    width: 8px;
+}
+.scrollbar-visible::-webkit-scrollbar-track {
+    background: transparent;
+}
+.scrollbar-visible::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 0.35);
+    border-radius: 4px;
 }

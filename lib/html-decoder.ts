@@ -1,8 +1,9 @@
 // utils/htmlDecoder.ts
-export function decodeHtmlEntities(html: string): string {
+export function decodeHtmlEntities(html: string | null | undefined): string {
+  const h = html ?? "";
   if (typeof window === "undefined") {
     // Server-side: use a simple replacement
-    return html
+    return h
       .replace(/&nbsp;/g, " ")
       .replace(/&amp;/g, "&")
       .replace(/&lt;/g, "<")
@@ -12,7 +13,7 @@ export function decodeHtmlEntities(html: string): string {
   } else {
     // Client-side: use textarea element
     const textarea = document.createElement("textarea");
-    textarea.innerHTML = html;
+    textarea.innerHTML = h;
     return textarea.value;
   }
 }

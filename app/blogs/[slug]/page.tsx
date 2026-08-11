@@ -6,6 +6,7 @@ import { parseHTMLContent } from "@/lib/parse-html-content";
 import PackagesBlock from "@/components/packages-block";
 import { decodeHtmlEntities } from "@/lib/html-decoder";
 import { getFullImageUrl } from "@/lib/getFullImageUrl";
+import { apiFetch } from "@/lib/api";
 
 export async function generateMetadata(_: {
   params: Promise<{ slug: string }>;
@@ -26,8 +27,7 @@ export default async function BlogSingle({
   const param = await params;
   const slug = param.slug;
 
-  const URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs/${slug}`;
-  const response = await fetch(URL);
+  const response = await apiFetch(`/blogs/${slug}`);
 
   if (response.status === 404) {
     const redirectedSlug =
@@ -52,8 +52,8 @@ export default async function BlogSingle({
     const block = blocks[i];
     if (block.type === "packages") {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?category=${block.config.category}&limit=${block.config.count}`,
+        const res = await apiFetch(
+          `/activity?category=${block.config.category}&limit=${block.config.count}`,
           { cache: "no-store" },
         );
         const json = await res.json();
@@ -65,12 +65,14 @@ export default async function BlogSingle({
   }
 
   const breadcrumbItems = [{ label: "Home", href: "/" }];
-  breadcrumbItems.push({ label: "Travel Guides", href: "/blogs" });
+  breadcrumbItems.push({ label: "Blogs", href: "/blogs" });
   breadcrumbItems.push({ label: blog.title, href: "#" });
 
   return (
     <div className="max-w-6xl mx-auto">
-      <MyBreadCrumb items={breadcrumbItems} />
+      <div className="px-4">
+        <MyBreadCrumb items={breadcrumbItems} />
+      </div>
       <section
         className="pt-8 md:pt-4 p-2
         prose-base leading leading-relaxed

@@ -1,5 +1,6 @@
 import { MenuController } from "./menu-controller";
 import { cache } from "react";
+import { apiFetch } from "@/lib/api";
 
 type MenuItem = {
   id: string;
@@ -21,7 +22,7 @@ type MenuData = {
 
 const fetchMenu = cache(async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/menu`, {
+    const res = await apiFetch(`/menu`, {
       next: { revalidate: 60 },
     });
 

@@ -238,7 +238,10 @@ export default function DesignYourTrip() {
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "",
+        },
         body: JSON.stringify({
           from: data.email,
           to: siteConfig.email,
@@ -301,7 +304,7 @@ export default function DesignYourTrip() {
 
   return (
     <main className="bg-canvas min-h-screen">
-      <section className="bg-ink py-16 md:py-24 px-6">
+      <section className="bg-link py-16 md:py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-3 -tracking-[1.44px]">
             Plan Your Custom Itinerary

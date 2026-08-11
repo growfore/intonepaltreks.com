@@ -6,14 +6,9 @@ import {
   LucideMapPin,
   LucideIcon,
   LucideMountain,
-  LucideTentTree,
-  LucideMap,
-  LucideBus,
-  LucideHandPlatter,
-  LucideSunMoon,
   LucideHotel,
-  LucidePlane,
   LucideHamburger,
+  LucideLanguages,
 } from "lucide-react";
 
 interface TripOverviewProps {
@@ -27,7 +22,7 @@ export function TripOverview({ trip }: TripOverviewProps) {
         <div className="text-sm font-semibold uppercase tracking-widest text-mute mb-4">
           At a Glance
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-6 bg-amber-50 p-6 rounded-sm">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-6 bg-tomato/5 p-6 rounded-sm">
           {/* Duration */}
           {trip.duration && (
             <GlanceItem
@@ -41,13 +36,6 @@ export function TripOverview({ trip }: TripOverviewProps) {
               text="Trip Grade"
               icon={LucideGauge}
               value={trip.difficultyLevel}
-            />
-          )}
-          {trip.groupSize && (
-            <GlanceItem
-              text="Group Size"
-              icon={LucideUsers}
-              value={trip.groupSize ?? "-"}
             />
           )}
           {trip.meetingPoint && (
@@ -69,7 +57,7 @@ export function TripOverview({ trip }: TripOverviewProps) {
             <GlanceItem
               text="Max Altitude"
               icon={LucideMountain}
-              value={trip.maximumAltitude ?? "-"}
+              value={`${trip.maximumAltitude} m`}
             />
           )}
 
@@ -81,33 +69,19 @@ export function TripOverview({ trip }: TripOverviewProps) {
             />
           )}
 
-          {trip.transportation && (
-            <GlanceItem
-              text="Transportation"
-              icon={LucidePlane}
-              value={trip?.transportation ?? "-"}
-            />
-          )}
-          {trip.meals && (
+          {trip.meals && trip.meals.length > 0 && (
             <GlanceItem
               text="Meals"
               icon={LucideHamburger}
-              value={trip?.meals ?? "-"}
+              value={trip.meals.join(", ")}
             />
           )}
 
-          {trip.bestSeason && (
+          {trip.languages && trip.languages.length > 0 && (
             <GlanceItem
-              text="Best Seasons"
-              icon={LucideSunMoon}
-              value={trip?.bestSeason ?? "-"}
-            />
-          )}
-          {trip.locations && trip.locations.length > 0 && (
-            <GlanceItem
-              text="Locations"
-              icon={LucideMap}
-              value={trip.locations.join(", ") ?? "-"}
+              text="Languages"
+              icon={LucideLanguages}
+              value={trip.languages.join(", ")}
             />
           )}
         </div>

@@ -9,15 +9,14 @@ import { decodeHtmlEntities } from "@/lib/html-decoder";
 import { getFullImageUrl } from "@/lib/getFullImageUrl";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl, imageUrl } from "@/lib/seo";
+import { apiFetch } from "@/lib/api";
 import InfoSidebar from "@/components/info-sidebar";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/info-page`,
-  );
+  const res = await apiFetch(`/info-page`);
   const data = await res.json();
   const pages: { slug: string }[] = data.infoPages || [];
   return pages.map((page) => ({ slug: page.slug }));
@@ -31,9 +30,7 @@ export async function generateMetadata({
   const param = await params;
   const slug = param.slug;
 
-  const URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/info-page/slug/${slug}`;
-
-  const response = await fetch(URL);
+  const response = await apiFetch(`/info-page/slug/${slug}`);
 
   if (response.status === 404) {
     const redirectedSlug =
@@ -97,8 +94,7 @@ export default async function BlogSingle({
   const param = await params;
   const slug = param.slug;
 
-  const URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/info-page/slug/${slug}`;
-  const response = await fetch(URL);
+  const response = await apiFetch(`/info-page/slug/${slug}`);
 
   if (response.status === 404) {
     const redirectedSlug =
@@ -124,8 +120,8 @@ export default async function BlogSingle({
     const block = blocks[i];
     if (block.type === "packages") {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?category=${block.config.category}&limit=${block.config.count}`,
+        const res = await apiFetch(
+          `/activity?category=${block.config.category}&limit=${block.config.count}`,
           { cache: "no-store" },
         );
         const json = await res.json();

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl } from "@/lib/seo";
+import { apiFetch } from "@/lib/api";
 import ContactForm from "@/components/booking-form";
 
 export const revalidate = 3600;
@@ -45,8 +46,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BookingPage() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?page=1&limit=100`,
+  const res = await apiFetch(
+    `/activity?page=1&limit=100`,
     { cache: "force-cache" },
   );
 

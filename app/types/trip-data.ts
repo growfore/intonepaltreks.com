@@ -1,38 +1,32 @@
 export interface TripData {
-  id: string;
+  id: number;
   title: string;
   slug: string;
-  shortDescription: string;
-  fullDescription: string;
+  overview: string;
   duration: string;
   price: number;
   maxPrice?: number;
-  accommodations: string[];
-  maximumAltitude: string;
   difficultyLevel: "EASY" | "MODERATE" | "CHALLENGING" | "STRENUOUS";
   guestCapacity: number;
   meetingPoint: string;
   dropOffPoint: string;
-  maxAltitude: string;
-  distance: string;
-  trekType: string;
-  accommodationType: string;
-  bestTime: string;
-  groupSize: string;
-  transportation: string;
-  meals: string;
-  bestSeason: string;
-  travelStyle: string;
-  locations: string[];
+  maximumAltitude: number;
+  videoIntro?: string;
+  accommodations: string[];
+  meals: string[];
+  languages: string[];
   images: string[];
-  keywords?: string[];
   itinerary: ItineraryVariant[];
-  faqs: FAQGroup[];
   highlights: string[];
   inclusions: string[];
   exclusions: string[];
   additionalInfo: AdditionalInfo[];
-  ratings: Rating;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    featuredMedia?: string | null;
+    schema?: string;
+  };
 }
 
 export interface ItineraryDay {
@@ -58,27 +52,8 @@ export interface ItineraryVariant {
   days: ItineraryDay[];
 }
 
-export interface FAQ {
-  question: string;
-  answer: string;
-}
-
-export interface FAQGroup {
-  category: string;
-  icon?: string;
-  faqs: FAQ[];
-}
-
 export interface AdditionalInfo {
   title: string;
   description: string;
   slug?: string;
-}
-
-export interface Rating {
-  average: number;
-  count: number;
-  googleRating?: number;
-  googleCount?: number;
-  recommendedPercentage?: number;
 }

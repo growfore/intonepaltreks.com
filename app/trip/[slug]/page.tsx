@@ -6,19 +6,15 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-export const dynamic = "force-static";
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 export async function generateStaticParams() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?page=1&limit=1000`,
-  );
+  const res = await apiFetch(`/activity?page=1&limit=1000`);
   const data = await res.json();
   const trips: { slug: string }[] = data.data || [];
   return trips.map((trip) => ({ slug: trip.slug }));
 }
 import ImageGallery from "@/components/image-gallery";
 import { AdditionalInfoRenderer } from "@/components/additional-info-renderer";
-import { TripFaqs } from "@/components/v0/trip-faqs";
 import { TripItinerary } from "@/components/v0/trip-itinerary";
 import { TripOverview } from "@/components/v0/trip-overview";
 import { decodeHtmlEntities } from "@/lib/html-decoder";
@@ -34,6 +30,7 @@ import { safeParseSchema } from "@/lib/safeParseSchema";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl, imageUrl } from "@/lib/seo";
 import { getFullImageUrl } from "@/lib/getFullImageUrl";
+import { apiFetch } from "@/lib/api";
 
 export async function generateMetadata({
   params,
@@ -42,8 +39,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const param = await params;
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity/slug/${param.slug}`,
+  const res = await apiFetch(
+    `/activity/slug/${param.slug}`,
   );
 
   if (res.status === 404) {
@@ -65,13 +62,12 @@ export async function generateMetadata({
   const trip = data.data;
 
   const title = trip.seo?.metaTitle || trip.title;
-  const description = trip.seo?.metaDescription || trip.shortDescription;
+  const description = trip.seo?.metaDescription || trip.overview;
   const seoImage = trip.seo?.featuredMedia || trip.images?.[0];
 
   return {
     title: title,
     description: description,
-    keywords: trip.keywords?.join(", ") || undefined,
     alternates: {
       canonical: `${siteConfig.url}/trip/${trip.slug}`,
     },
@@ -109,8 +105,8 @@ export default async function TripPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity/slug/${slug}`,
+  const res = await apiFetch(
+    `/activity/slug/${slug}`,
   );
 
   if (res.status === 404) {
@@ -184,7 +180,7 @@ export default async function TripPage({
     "@context": "https://schema.org",
     "@type": "Product",
     name: trip.title,
-    description: trip.shortDescription,
+    description: trip.overview,
     image: trip.images?.[0] ? imageUrl(trip.images[0]) : undefined,
     offers: offerSchema,
     aggregateRating: {
@@ -223,7 +219,7 @@ export default async function TripPage({
       <section className="grid lg:grid-cols-2 bg-canvas">
         <div className="relative aspect-[4/3]">
           <Image
-            src={getFullImageUrl(trip.images[0])}
+            src={trip.images[0]}
             alt={trip.title}
             fill
             priority
@@ -234,15 +230,10 @@ export default async function TripPage({
         </div>
         <div className="flex items-center">
           <div className="w-full px-5 py-12 md:px-10 lg:px-14 xl:px-20">
-            {trip.locations && trip.locations.length > 0 && (
-              <p className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-mute">
-                {trip.locations.join(" / ")}
-              </p>
-            )}
-            <h1 className="mt-3 text-4xl md:text-5xl xl:text-6xl font-display text-ink leading-[1.05]">
+            <h1 className="mt-3 text-4xl md:text-5xl xl:text-6xl font-bold text-ink leading-[1.05]">
               {trip.title}
             </h1>
-            <TripHeaderDescription html={trip.shortDescription} />
+            <TripHeaderDescription html={trip.overview} />
           </div>
         </div>
       </section>
@@ -296,20 +287,12 @@ export default async function TripPage({
               <div
                 id="intro"
                 dangerouslySetInnerHTML={{
-                  __html: decodeHtmlEntities(trip.fullDescription),
+                  __html: decodeHtmlEntities(trip.overview),
                 }}
               />
               <TripItinerary trip={trip} />
-              {trip.map && (
-                <div
-                  id="map"
-                  dangerouslySetInnerHTML={{
-                    __html: decodeHtmlEntities(trip.map),
-                  }}
-                />
-              )}
 
-              {trip.videoUrl && (
+              {trip.videoIntro && (
                 <>
                   <h2
                     id="video"
@@ -322,7 +305,7 @@ export default async function TripPage({
                   <div
                     id="video"
                     dangerouslySetInnerHTML={{
-                      __html: decodeHtmlEntities(trip.videoUrl),
+                      __html: decodeHtmlEntities(trip.videoIntro),
                     }}
                   />
                 </>
@@ -349,7 +332,7 @@ export default async function TripPage({
                     id="trip-info"
                     className="font-bold my-4 flex items-center gap-2 scroll-mt-28"
                   >
-                    <LucideInfo className="size-8" /> More Information
+                     Good to Know
                   </h2>
                   {trip.additionalInfo.map((info: any, idx: any) => {
                     return (
@@ -362,9 +345,7 @@ export default async function TripPage({
                   })}
                 </>
               )}
-              <div id="faqs">
-                {trip.faqs && trip.faqs.length > 0 && <TripFaqs trip={trip} />}
-              </div>
+              <div id="faqs"></div>
             </div>
           </div>
           <aside className="hidden lg:block">
@@ -384,12 +365,12 @@ export default async function TripPage({
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mute">
             Gallery
           </p>
-          <h2 className="mt-2 font-display text-3xl md:text-4xl text-ink">
+          <h2 className="mt-2 font-bold text-3xl md:text-4xl text-ink">
             Photos from the trail
           </h2>
         </div>
         <div className="mt-8">
-          <ImageGallery images={trip.images} keywords={trip.keywords || []} />
+          <ImageGallery images={trip.images} keywords={[]} />
         </div>
       </section>
       <BottomBookingBar price={trip.price} slug={slug} title={trip.title} />

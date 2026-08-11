@@ -16,7 +16,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-[92vh] min-h-[640px] w-full overflow-hidden">
+    <section className="relative min-h-[70vh] w-full overflow-hidden">
       <Image
         src="/images/tilicho.jpg"
         alt="Himalayan adventure"
@@ -26,21 +26,21 @@ const HeroSection = () => {
       />
       <div className="absolute inset-0 gradient-hero" />
 
-      <div className="relative z-10 h-full container mx-auto max-w-[1400px] px-4 flex flex-col items-center justify-center text-center pt-16">
-        <p className="text-white/90 text-xs uppercase tracking-[0.32em] mb-6">
+      <div className="relative z-10 h-full container mx-auto pt-24  px-4 flex flex-col items-center justify-center text-center">
+        <p className=" text-sm  uppercase tracking-[0.12]   bg-tomato mb-2 p-1 font-medium -rotate-1 text-black">
           Private &amp; customised Nepal journeys since 2012
         </p>
-        <h1 className="text-display text-white text-5xl sm:text-5xl font-[900] max-w-5xl text-balance uppercase">
+        <h1 className=" text-white text-5xl sm:text-5xl md:text-6xl font-black max-w-5xl text-balance">
           Explore the <br />
           Himalaya with Into Nepal
         </h1>
-        <p className="text-white/85 text-base md:text-lg max-w-xl mt-6 md:mt-8 mb-10 text-balance px-4">
+        <p className="text-white/85 text-base md:text-xl max-w-xl mt-6 md:mt-8 mb-10 text-balance px-4">
           Hand-crafted treks and tours across Nepal — designed by certified
           local guides who call the mountains home.
         </p>
       </div>
 
-      <div className="absolute bottom-32 left-0 right-0 z-20 container mx-auto max-w-[1400px] px-4 pb-10 md:pb-14 translate-y-1/2">
+      <div className="absolute bottom-12 md:bottom-24 left-0 right-0 z-20 container mx-auto max-w-[1400px] px-4 pb-10 md:pb-14 translate-y-1/2">
         <form
           onSubmit={submitSearch}
           className="bg-canvas/95 backdrop-blur-md shadow-float rounded-sm border border-hairline p-2 flex items-stretch gap-2 w-full max-w-2xl mx-auto"

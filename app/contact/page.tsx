@@ -6,6 +6,7 @@ import MapSection from "@/components/map-section";
 import ContactInfo from "@/components/contact-info";
 import PageHeader from "@/components/page-header";
 import Section from "@/components/section";
+import TrustStrap from "@/components/sections/trust-strap";
 
 export const metadata: Metadata = {
   title: "Contact Us - Get in Touch",
@@ -54,11 +55,12 @@ const ContactPage = () => {
         subtitle="Fill out the form below and we'll receive your message directly on WhatsApp!"
       />
       <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4 mx-auto">
           <ContactForm />
           <ContactInfo />
         </div>
         <MapSection />
+        <TrustStrap/>
       </Section>
     </>
   );

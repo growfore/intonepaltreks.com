@@ -1,10 +1,11 @@
 import { FeaturedTripImage } from "./featured-trip-image";
 import Link from "next/link";
 import { LucideChevronRight } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 
 export async function FeaturedTrip() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/featured/trip-of-the-month?includeActivity=true`,
+  const res = await apiFetch(
+    `/featured/trip-of-the-month?includeActivity=true`,
     { next: { revalidate: 60 } },
   );
   const json = await res.json();

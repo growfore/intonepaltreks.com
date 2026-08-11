@@ -7,7 +7,9 @@ import FeaturedSections from "@/components/sections/featuered-sections";
 import HeroSection from "@/components/sections/old-hero";
 import WelcomeSection from "@/components/sections/welcome-section";
 import WhySection from "@/components/sections/why-section";
+import TrustStrap from "@/components/sections/trust-strap";
 import Testimonials from "@/components/testimonials";
+import { apiFetch } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Into Nepal Treks - Private & Customised Nepal Tours and Treks",
@@ -50,8 +52,8 @@ export const metadata: Metadata = {
 export default async function Homepage() {
   let data;
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/featured?includeActivity=true`,
+    const res = await apiFetch(
+      `/featured?includeActivity=true`,
     );
 
     data = await res.json();
@@ -76,18 +78,19 @@ export default async function Homepage() {
     (tag: { slug: string }) => tag.slug !== "trip-of-the-month",
   );
   const firstFeatured = featuredWithoutTOM.slice(0, 1);
-  const secondFeatured = featuredWithoutTOM.slice(1, 3);
+  const secondFeatured = featuredWithoutTOM.slice(1, 2);
+  const thirdFeatured = featuredWithoutTOM.slice(2, 3);
 
   return (
     <>
       <HeroSection />
-      <div className="h-32 md:h-24 bg-canvas"  />
       <CategorySection />
       <FeaturedSections featuredTags={firstFeatured} />
       <WelcomeSection />
+      <FeaturedSections featuredTags={secondFeatured} />
       {/*<FeaturedTrip />*/}
       <Testimonials />
-      <FeaturedSections featuredTags={secondFeatured} />
+      <FeaturedSections featuredTags={thirdFeatured} />
       <WhySection />
     </>
   );

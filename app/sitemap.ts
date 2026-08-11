@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/siteConfig";
+import { apiFetch } from "@/lib/api";
 
 const baseUrl = siteConfig.url;
 
@@ -51,8 +52,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let trips: MetadataRoute.Sitemap = [];
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?page=1&limit=1000`,
+    const res = await apiFetch(
+      `/activity?page=1&limit=1000`,
       { next: { revalidate: 3600 } },
     );
     const data = await res.json();
@@ -69,8 +70,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let infoPages: MetadataRoute.Sitemap = [];
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/info-page`,
+    const res = await apiFetch(
+      `/info-page`,
       { next: { revalidate: 3600 } },
     );
     const data = await res.json();

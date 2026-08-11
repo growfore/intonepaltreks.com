@@ -28,8 +28,8 @@ const staticSections: Section[] = [
   { id: "highlights", label: "Highlights", icon: <LucideStar /> },
   { id: "itinerary", label: "Itinerary", icon: <LucideMapPin /> },
   { id: "map", label: "Map", icon: <LucideMap /> },
-  { id: "inclusions", label: "Includes", icon: <LucideCheck /> },
-  { id: "exclusions", label: "Excludes", icon: <LucideX /> },
+  { id: "inclusions", label: "Include/Exludes", icon: <LucideCheck /> },
+  // { id: "exclusions", label: "Excludes", icon: <LucideX /> },
   { id: "gallery", label: "Trip Photos", icon: <LucideImages/>}
 ];
 
@@ -111,7 +111,7 @@ export function SectionNavigation({
         const el = document.getElementById(id);
         if (el) {
           const y = el.getBoundingClientRect().top + window.scrollY - 120;
-          window.scrollTo({ top: y, behavior: "smooth" });
+          window.scrollTo({ top: y});
         }
       }, 300);
       return () => clearTimeout(timer);

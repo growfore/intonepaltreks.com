@@ -27,7 +27,7 @@ export default function TeamCard({
       </div>
       <div className="space-y-2 text-center sm:text-left">
         <h3 className="font-semibold text-ink">{name}</h3>
-        <p className="text-sm text-mute">{designation}</p>
+        <p className="text-sm text-mute font-medium">{designation}</p>
         <p className="text-sm text-body leading-relaxed">{description}</p>
       </div>
     </div>

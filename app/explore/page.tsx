@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl } from "@/lib/seo";
+import { apiFetch } from "@/lib/api";
 import ExploreClient from "./explore-client";
 
 export const dynamic = "force-dynamic";
@@ -46,21 +47,30 @@ export const metadata: Metadata = {
 export default async function ExplorePage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; q?: string }>;
+  searchParams: Promise<{ category?: string; q?: string; country?: string }>;
 }) {
   const params = await searchParams;
-  const [tripsRes, categoriesRes] = await Promise.all([
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?page=1&limit=50`,
-      { cache: "no-store" },
-    ),
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/trip-category`),
+  const [tripsRes, categoriesRes, countriesRes] = await Promise.all([
+    apiFetch(`/activity?page=1&limit=50`, { cache: "no-store" }),
+    apiFetch(`/trip-category`),
+    apiFetch(`/country`),
   ]);
 
   const tripsJSON = await tripsRes.json();
   const categoriesJSON = await categoriesRes.json();
+  const countriesJSON = await countriesRes.json();
   const trips = tripsJSON.data ?? [];
   const categories = categoriesJSON.data?.tripCategories ?? [];
+  const countries = countriesJSON.data?.countries ?? [];
 
-  return <ExploreClient trips={trips} categories={categories} initialCategory={params.category ?? ""} initialSearch={params.q ?? ""} />;
+  return (
+    <ExploreClient
+      trips={trips}
+      categories={categories}
+      countries={countries}
+      initialCategory={params.category ?? ""}
+      initialCountry={params.country ?? ""}
+      initialSearch={params.q ?? ""}
+    />
+  );
 }

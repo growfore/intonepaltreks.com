@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export default function SectionHeading({
   title,
   subtitle,
-  eyebrow,
+  eyebrow ="",
   align = "center",
   tone = "light",
   className,
@@ -21,7 +21,7 @@ export default function SectionHeading({
       className={cn(
         align === "center"
           ? "mx-auto max-w-3xl text-center"
-          : "max-w-2xl",
+          : "max-w-3xl",
         "mb-12 md:mb-16",
         className,
       )}
@@ -29,7 +29,7 @@ export default function SectionHeading({
       {eyebrow && (
         <p
           className={cn(
-            "mb-3 text-[11px] font-medium uppercase tracking-[0.24em]",
+            "mb-3 text-sm font-medium uppercase",
             dark ? "text-link-bg-soft" : "text-link",
           )}
         >
@@ -38,7 +38,7 @@ export default function SectionHeading({
       )}
       <h2
         className={cn(
-          "text-display text-4xl md:text-6xl text-balance",
+          "text-display text-3xl md:text-4xl text-balance",
           dark ? "text-white" : "text-ink",
         )}
       >

@@ -25,10 +25,12 @@ function parseDuration(duration: string): number | null {
 
 type TripItem = { id: string; title: string; slug: string; canonicalPath?: string; duration: string; price: number; difficultyLevel: string; images: string[]; keywords: string[] };
 type CategoryItem = { id: string; categoryHandle: string; categoryName: string; categoryImage: string | null };
+type CountryItem = { id: string; countryHandle: string; countryName: string | null; countryImage: string | null };
 
-export default function ExploreClient({ trips: initialTrips, categories, initialCategory, initialSearch }: { trips: TripItem[]; categories: CategoryItem[]; initialCategory?: string; initialSearch?: string }) {
+export default function ExploreClient({ trips: initialTrips, categories, countries, initialCategory, initialCountry, initialSearch }: { trips: TripItem[]; categories: CategoryItem[]; countries: CountryItem[]; initialCategory?: string; initialCountry?: string; initialSearch?: string }) {
   const router = useRouter();
   const [categoryTrips, setCategoryTrips] = useState<TripItem[] | null>(null);
+  const [countryTrips, setCountryTrips] = useState<TripItem[] | null>(null);
   const [search, setSearch] = useState(initialSearch ?? "");
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
@@ -39,16 +41,24 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
   const [durationMax, setDurationMax] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory ?? "");
+  const [selectedCountry, setSelectedCountry] = useState(initialCountry ?? "");
 
   const syncedCategoryRef = useRef(initialCategory ?? "");
+  const syncedCountryRef = useRef(initialCountry ?? "");
   useEffect(() => {
-    if (syncedCategoryRef.current === selectedCategory) return;
+    if (
+      syncedCategoryRef.current === selectedCategory &&
+      syncedCountryRef.current === selectedCountry
+    )
+      return;
     syncedCategoryRef.current = selectedCategory;
+    syncedCountryRef.current = selectedCountry;
     const params = new URLSearchParams();
     if (selectedCategory) params.set("category", selectedCategory);
+    if (selectedCountry) params.set("country", selectedCountry);
     const qs = params.toString();
     router.replace(`/explore${qs ? `?${qs}` : ""}`, { scroll: false });
-  }, [selectedCategory, router]);
+  }, [selectedCategory, selectedCountry, router]);
 
   useEffect(() => {
     if (!selectedCategory) return;
@@ -57,6 +67,7 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?category=${selectedCategory}&limit=50`,
+          { headers: { "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "" } },
         );
         const json = await res.json();
         if (!cancelled) setCategoryTrips(json.data ?? []);
@@ -67,7 +78,25 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
     return () => { cancelled = true; };
   }, [selectedCategory]);
 
-  const trips = categoryTrips === null ? initialTrips : categoryTrips;
+  useEffect(() => {
+    if (!selectedCountry) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?country=${selectedCountry}&limit=50`,
+          { headers: { "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "" } },
+        );
+        const json = await res.json();
+        if (!cancelled) setCountryTrips(json.data ?? []);
+      } catch {
+        if (!cancelled) setCountryTrips([]);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [selectedCountry]);
+
+  const trips = countryTrips !== null ? countryTrips : categoryTrips !== null ? categoryTrips : initialTrips;
 
   const filtered = useMemo(() => {
     return trips.filter((trip: TripItem) => {
@@ -117,16 +146,17 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
     setDurationMin("");
     setDurationMax("");
     setSelectedCategory("");
+    setSelectedCountry("");
   };
 
   const hasFilters =
-    priceMin || priceMax || selectedDifficulties.length > 0 || durationMin || durationMax || selectedCategory;
+    priceMin || priceMax || selectedDifficulties.length > 0 || durationMin || durationMax || selectedCategory || selectedCountry;
 
   return (
     <div className="min-h-screen bg-canvas-soft">
       <div className="bg-canvas border-b border-hairline">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 pt-14 md:pt-20 pb-10">
-          <h1 className="mt-3 font-display text-4xl md:text-6xl text-ink leading-[1.05]">
+          <h1 className="mt-3 font-black text-4xl md:text-6xl text-ink leading-[1.05]">
             Find Your Next Adventure
           </h1>
           <p className="mt-4 max-w-xl text-base md:text-lg text-mute">
@@ -169,6 +199,40 @@ export default function ExploreClient({ trips: initialTrips, categories, initial
             </div>
 
             <div className="space-y-8">
+              {/* Country */}
+              <div>
+                <h4 className="text-xs font-medium uppercase tracking-widest text-mute mb-3">
+                  Country
+                </h4>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-3 text-sm text-body cursor-pointer hover:text-ink transition-colors">
+                    <input
+                      type="radio"
+                      name="country"
+                      checked={selectedCountry === ""}
+                      onChange={() => setSelectedCountry("")}
+                      className="size-4 accent-link border-hairline"
+                    />
+                    All Countries
+                  </label>
+                  {countries.map((c: CountryItem) => (
+                    <label
+                      key={c.id}
+                      className="flex items-center gap-3 text-sm text-body cursor-pointer hover:text-ink transition-colors"
+                    >
+                      <input
+                        type="radio"
+                        name="country"
+                        checked={selectedCountry === c.countryHandle}
+                        onChange={() => setSelectedCountry(c.countryHandle)}
+                        className="size-4 accent-link border-hairline"
+                      />
+                      {c.countryName || c.countryHandle}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               {/* Category */}
               <div>
                 <h4 className="text-xs font-medium uppercase tracking-widest text-mute mb-3">

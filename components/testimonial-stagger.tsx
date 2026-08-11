@@ -1,16 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getFullImageUrl } from "@/lib/getFullImageUrl";
 
 let rotateSeq = 0;
+
+const TEXT_LIMIT = 150;
 
 export interface StaggerTestimonial {
   id: string;
   author: string;
   rating: number;
   content: string;
+  media?: string;
   _k?: number;
 }
 
@@ -47,12 +52,17 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
   cardSize,
 }) => {
   const isCenter = position === 0;
+  const [expanded, setExpanded] = useState(false);
+  const longText = testimonial.content.length > TEXT_LIMIT;
+  const shownText = longText && !expanded
+    ? `${testimonial.content.slice(0, TEXT_LIMIT)}…`
+    : testimonial.content;
 
   return (
     <div
       onClick={() => handleMove(position)}
       className={cn(
-        "absolute left-1/2 top-1/2 cursor-pointer border-2 p-8 rounded-2xl transition-all duration-500 ease-in-out",
+        "absolute left-1/2 top-1/2 cursor-pointer border-2 p-8 rounded-2xl transition-all duration-500 ease-in-out overflow-hidden flex flex-col",
         isCenter
           ? "z-10 bg-primary text-primary-foreground border-primary"
           : "z-0 bg-card text-card-foreground border-border hover:border-primary/50"
@@ -71,18 +81,45 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           : "0px 0px 0px 0px transparent",
       }}
     >
-      <Initials name={testimonial.author} isCenter={isCenter} />
-      <h3
-        className={cn(
-          "text-base sm:text-xl font-medium line-clamp-4",
-          isCenter ? "text-primary-foreground" : "text-ink"
+      {testimonial.media ? (
+        <Image
+          src={getFullImageUrl(testimonial.media)}
+          alt=""
+          width={56}
+          height={56}
+          unoptimized
+          className="mb-4 size-14 object-cover rounded-xl"
+        />
+      ) : (
+        <Initials name={testimonial.author} isCenter={isCenter} />
+      )}
+      <div className="scrollbar-visible flex-1 min-h-0 overflow-y-scroll">
+        <h3
+          className={cn(
+            "text-base sm:text-xl font-medium",
+            isCenter ? "text-primary-foreground" : "text-ink"
+          )}
+        >
+          &ldquo;{shownText}&rdquo;
+        </h3>
+        {longText && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpanded((v) => !v);
+            }}
+            className={cn(
+              "mt-2 text-xs font-semibold underline underline-offset-2",
+              isCenter ? "text-primary-foreground/80" : "text-link"
+            )}
+          >
+            {expanded ? "Read less" : "Read more"}
+          </button>
         )}
-      >
-        &ldquo;{testimonial.content}&rdquo;
-      </h3>
+      </div>
       <p
         className={cn(
-          "absolute bottom-8 left-8 right-8 mt-2 text-sm italic line-clamp-1",
+          "mt-2 text-sm italic line-clamp-1",
           isCenter ? "text-primary-foreground/80" : "text-mute"
         )}
       >
@@ -133,9 +170,7 @@ export const StaggerTestimonials: React.FC<{
   return (
     <div className="relative w-full overflow-hidden bg-canvas-soft" style={{ height: 600 }}>
       {testimonialsList.map((testimonial, index) => {
-        const position = testimonialsList.length % 2
-          ? index - (testimonialsList.length + 1) / 2
-          : index - testimonialsList.length / 2;
+        const position = index - (testimonialsList.length - 1) / 2;
         return (
           <TestimonialCard
             key={testimonial._k ?? testimonial.id}
@@ -150,7 +185,7 @@ export const StaggerTestimonials: React.FC<{
         <button
           onClick={() => handleMove(-1)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center text-2xl transition-colors",
+            "flex h-14 w-14 items-center justify-center text-2xl transition-colors rounded-full",
             "bg-background border-2 border-border hover:bg-primary hover:text-primary-foreground",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           )}
@@ -161,7 +196,7 @@ export const StaggerTestimonials: React.FC<{
         <button
           onClick={() => handleMove(1)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center text-2xl transition-colors",
+            "flex h-14 w-14 items-center justify-center text-2xl transition-colors rounded-full",
             "bg-background border-2 border-border hover:bg-primary hover:text-primary-foreground",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           )}

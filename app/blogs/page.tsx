@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl } from "@/lib/seo";
+import { apiFetch } from "@/lib/api";
 import { BlogCard } from "@/components/card/blog-card";
 import PageHeader from "@/components/page-header";
 import Section from "@/components/section";
@@ -44,9 +45,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs/published`,
-  );
+  const res = await apiFetch(`/blogs/published`);
 
   const resJSON = await res.json();
 
@@ -56,11 +55,11 @@ export default async function BlogPage() {
   return (
     <>
       <PageHeader
-        title="Travel Guides"
+        title="Blogs"
         subtitle={`${total} article${total !== 1 ? "s" : ""} to inspire your next adventure`}
       />
 
-      <Section>
+      <Section className="container mx-auto">
         {blogs?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs?.map((blog: any) => (

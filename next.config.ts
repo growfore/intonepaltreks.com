@@ -41,6 +41,7 @@ const nextConfig: NextConfig = {
       ...(apiHostname
         ? [{ protocol: "https" as const, hostname: apiHostname, pathname: "/**" }]
         : []),
+      { protocol: "http", hostname: "localhost", pathname: "/**" },
       {
         protocol: "https",
         hostname: "api.intonepaltreks.com",
@@ -50,6 +51,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "api.growfore.com",
         pathname: "/api/v1/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "growfore.com",
+        pathname: "/wp-content/uploads/**",
       },
     ],
   },

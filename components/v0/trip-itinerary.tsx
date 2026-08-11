@@ -133,6 +133,7 @@ function DayRow({
       </div>
 
       <div className={isLast ? "pb-1" : "pb-8"}>
+
         <p className="text-[11px] uppercase tracking-[0.24em] text-mute mb-1">
           Day {dayNo}
         </p>
