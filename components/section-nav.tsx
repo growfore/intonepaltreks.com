@@ -81,28 +81,9 @@ export function SectionNavigation({
   }, [additionalInfo]);
 
   const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "");
-  const [mainNavHidden, setMainNavHidden] = useState(true);
   const [overviewPast, setOverviewPast] = useState(false);
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const navScrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const delta = currentScrollY - lastScrollY;
-      if (Math.abs(delta) < 10) return;
-      if (delta > 0 && currentScrollY > 80) {
-        setMainNavHidden(true);
-      } else if (delta < 0) {
-        setMainNavHidden(false);
-      }
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     if (window.location.hash) {
@@ -179,7 +160,7 @@ export function SectionNavigation({
     history.replaceState(null, "", `#${id}`);
   };
 
-  const showNav = mainNavHidden && overviewPast;
+  const showNav = overviewPast;
 
   return (
     <nav

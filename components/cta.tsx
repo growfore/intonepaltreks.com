@@ -90,7 +90,7 @@ export default async function Cta() {
 
           <div className="text-center md:text-left">
             <h2 className="text-4xl md:text-6xl text-balance font-bold">
-              Tailor your trip <span className="font-script text-tomato">with experts.</span>
+              Tailor your trip <span className="font-script text-tomato [webkit-text-stroke:2px_white]">with experts.</span>
             </h2>
             <p className="mt-5 text-lg text-white font-medium">
               Tell us what you dream of and our local guides will craft the

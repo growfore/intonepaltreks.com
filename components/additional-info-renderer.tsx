@@ -1,5 +1,13 @@
+"use client";
+
 import { decodeHtmlEntities } from "@/lib/html-decoder";
 import { slugify } from "@/lib/slugify";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export type AdditionalInfoItem = {
   title: string;
@@ -15,13 +23,23 @@ export const AdditionalInfoRenderer = ({
 }) => {
   const sectionId = item.slug || slugify(item.title);
   return (
-    <>
-      <h2 id={sectionId}>{item.title}</h2>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: decodeHtmlEntities(item.description),
-        }}
-      />
-    </>
+    <Accordion type="single" collapsible>
+      <AccordionItem value={sectionId} className="border-border">
+        <AccordionTrigger
+          id={sectionId}
+          className="text-left font-bold text-xl text-ink hover:no-underline py-3"
+        >
+          {item.title}
+        </AccordionTrigger>
+        <AccordionContent className="text-muted-foreground leading-relaxed">
+          <div
+            className="prose prose-base max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: decodeHtmlEntities(item.description),
+            }}
+          />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };

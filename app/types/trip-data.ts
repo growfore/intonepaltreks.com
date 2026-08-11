@@ -21,6 +21,7 @@ export interface TripData {
   inclusions: string[];
   exclusions: string[];
   additionalInfo: AdditionalInfo[];
+  faq?: { title: string; items: { q: string; a: string }[] }[];
   seo?: {
     metaTitle?: string;
     metaDescription?: string;

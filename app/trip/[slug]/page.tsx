@@ -17,6 +17,7 @@ import ImageGallery from "@/components/image-gallery";
 import { AdditionalInfoRenderer } from "@/components/additional-info-renderer";
 import { TripItinerary } from "@/components/v0/trip-itinerary";
 import { TripOverview } from "@/components/v0/trip-overview";
+import { TripFaq } from "@/components/v0/trip-faq";
 import { decodeHtmlEntities } from "@/lib/html-decoder";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -345,7 +346,7 @@ export default async function TripPage({
                   })}
                 </>
               )}
-              <div id="faqs"></div>
+              <TripFaq trip={trip} />
             </div>
           </div>
           <aside className="hidden lg:block">

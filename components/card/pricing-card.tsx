@@ -15,7 +15,7 @@ export default function PricingCardSidebar({
   title: string;
 }) {
   return (
-    <div className="border-l border-link bg-canvas rounded-r-sm overflow-hidden w-full">
+    <div className="bg-canvas rounded-sm overflow-hidden w-full">
       <div className="flex items-center gap-2 bg-link-bg-soft px-5 py-3">
         <LucideTag className="size-4 text-link" />
         <h3 className="font-display font-bold text-lg text-ink">
@@ -23,6 +23,7 @@ export default function PricingCardSidebar({
         </h3>
       </div>
       <div className="space-y-6 p-5 md:p-6">
+        <div className="font-bold text-xl">{title}</div>
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-mute mb-1">
             Price per person
