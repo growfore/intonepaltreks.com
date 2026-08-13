@@ -285,12 +285,6 @@ export default async function TripPage({
                   __html: decodeHtmlEntities(trip.highlights[0]),
                 }}
               />
-              <div
-                id="intro"
-                dangerouslySetInnerHTML={{
-                  __html: decodeHtmlEntities(trip.overview),
-                }}
-              />
               <TripItinerary trip={trip} />
 
               {trip.videoIntro && (

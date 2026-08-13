@@ -4,14 +4,7 @@ import { useState } from "react";
 import { TripData } from "@/app/types/trip-data";
 import { decodeHtmlEntities } from "@/lib/html-decoder";
 import { cn } from "@/lib/utils";
-import {
-  LucideBedDouble,
-  LucideChefHat,
-  LucideChevronDown,
-  LucideChevronUp,
-  LucideClock,
-  LucideMapPin,
-} from "lucide-react";
+import { LucideChevronDown } from "lucide-react";
 
 function splitDayTitle(title: string) {
   const match = title.match(/^Day\s*(\d+)[:\s-]*/i);
@@ -59,12 +52,11 @@ export function TripItinerary({ trip }: TripItineraryProps) {
       </div>
 
       {days.map((day, index) => {
-        const { dayNumber, rest } = splitDayTitle(day.title);
+        const { rest } = splitDayTitle(day.title);
         return (
           <DayRow
             key={`${active.id}-${index}`}
             day={day}
-            dayNo={dayNumber ?? String(day.day || index + 1)}
             title={rest}
             isLast={index === days.length - 1}
             defaultOpen={index === 0}
@@ -77,88 +69,38 @@ export function TripItinerary({ trip }: TripItineraryProps) {
 
 function DayRow({
   day,
-  dayNo,
   title,
   isLast,
   defaultOpen,
 }: {
   day: TripData["itinerary"][number]["days"][number];
-  dayNo: string;
   title: string;
   isLast: boolean;
   defaultOpen: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
 
-  const stats = [
-    day.duration && {
-      icon: <LucideClock className="size-3.5" />,
-      label: "Duration",
-      value: day.duration,
-    },
-    day.distance && {
-      icon: <LucideMapPin className="size-3.5" />,
-      label: "Distance",
-      value: day.distance,
-    },
-    day.ascent && {
-      icon: <LucideChevronUp className="size-3.5 text-green-600" />,
-      label: "Ascent",
-      value: day.ascent,
-    },
-    day.descent && {
-      icon: <LucideChevronDown className="size-3.5 text-red-600" />,
-      label: "Descent",
-      value: day.descent,
-    },
-    (day.meals?.length ?? 0) > 0 && {
-      icon: <LucideChefHat className="size-3.5" />,
-      label: "Meals",
-      value: day.meals!.join(", "),
-    },
-    (day.accommodations?.length ?? 0) > 0 && {
-      icon: <LucideBedDouble className="size-3.5" />,
-      label: "Stay",
-      value: day.accommodations!.join(", "),
-    },
-  ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string }[];
-
   return (
     <div className="relative grid grid-cols-[auto_1fr] gap-4 md:gap-6">
-      <div className="relative flex flex-col items-center pt-1.5">
-        <div className="size-2.5 rounded-full bg-link shrink-0" />
+      <div className="relative">
         {!isLast && (
-          <div className="flex-1 w-px bg-hairline mt-2 mb-2 min-h-10" />
+          <div className="absolute left-1/2 -translate-x-1/2 top-4 md:top-5 bottom-0 w-px bg-hairline" />
         )}
       </div>
 
       <div className={isLast ? "pb-1" : "pb-8"}>
-
-        <p className="text-[11px] uppercase tracking-[0.24em] text-mute mb-1">
-          Day {dayNo}
-        </p>
-        <h3 className="font-display text-xl md:text-2xl text-ink mb-3">
-          {title}
-        </h3>
-
-        {stats.length > 0 && (
-          <div className="flex flex-wrap gap-x-6 gap-y-2 mb-4">
-            {stats.map((s) => (
-              <span
-                key={s.label}
-                className="inline-flex items-center gap-1.5 text-sm md:text-md font-medium text-mute"
-              >
-                <span className="text-link">{s.icon}</span>
-                <span className="uppercase tracking-[0.14em]">{s.label}:</span>
-                <span className="text-ink">{s.value}</span>
-              </span>
-            ))}
+        {title && (
+          <div className="flex items-center gap-4 md:gap-6">
+            <span className="size-2.5 rounded-full bg-link shrink-0" />
+            <h3 className="font-display text-xl md:text-2xl text-ink">
+              {title}
+            </h3>
           </div>
         )}
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex items-center gap-2 text-sm text-link hover:text-link-deep transition-colors border-b border-link/30 hover:border-link pb-0.5"
+          className="mt-3 inline-flex items-center gap-2 text-sm text-link hover:text-link-deep transition-colors border-b border-link/30 hover:border-link pb-0.5"
         >
           {open ? "Hide details" : "View full day"}
           <LucideChevronDown
@@ -174,7 +116,7 @@ function DayRow({
           }`}
         >
           <div className="overflow-hidden">
-            <div className="bg-canvas-soft  space-y-4">
+            <div className="bg-canvas-soft space-y-4">
               <div
                 className="prose max-w-none prose-p:leading-relaxed prose-p:text-ink prose-a:text-link prose-a:underline prose-strong:text-ink prose-headings:text-ink prose-headings:font-bold prose-img:rounded-md prose-img:my-5 prose-li:text-ink"
                 dangerouslySetInnerHTML={{
