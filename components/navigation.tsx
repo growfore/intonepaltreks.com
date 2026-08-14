@@ -14,7 +14,9 @@ type MenuItem = {
 type MenuData = {
   success: boolean;
   data: {
+    auto?: boolean;
     items: MenuItem[];
+    autoItems?: MenuItem[];
     version: string;
     updatedAt: string;
   };
@@ -29,7 +31,9 @@ const fetchMenu = cache(async () => {
     if (!res.ok) return [];
 
     const data: MenuData = await res.json();
-    return data?.data?.items ?? [];
+    return data?.data?.auto
+      ? (data.data.autoItems ?? [])
+      : (data.data.items ?? []);
   } catch {
     return [];
   }
