@@ -12,6 +12,7 @@ import Cta from "@/components/cta";
 import BackToTop from "@/components/back-to-top";
 import FloatingWhatsAppIcon from "@/components/floating-whatsapp";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { developer, developerAttributionGraph } from "@/lib/developer-attribution";
 import Script from "next/script";
 
 export const metadata: Metadata = {
@@ -48,38 +49,44 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  creator: developer.name,
 };
 
-const organizationSchema = {
+const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: siteConfig.name,
-  url: siteUrl,
-  logo: `${siteUrl}${siteConfig.logo}`,
-  image: `${siteUrl}/og.png`,
-  description: siteConfig.description,
-  foundingDate: siteConfig.established,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: siteConfig.address.street,
-    addressLocality: siteConfig.address.city,
-    addressRegion: siteConfig.address.district,
-    postalCode: siteConfig.address.postalCode,
-    addressCountry: siteConfig.address.country,
-  },
-  contactPoint: [
+  "@graph": [
     {
-      "@type": "ContactPoint",
-      telephone: siteConfig.phoneNumbers[0].phone,
-      email: siteConfig.email,
-      contactType: "customer service",
-      availableLanguage: ["English", "Nepali"],
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteUrl,
+      logo: `${siteUrl}${siteConfig.logo}`,
+      image: `${siteUrl}/og.png`,
+      description: siteConfig.description,
+      foundingDate: siteConfig.established,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: siteConfig.address.street,
+        addressLocality: siteConfig.address.city,
+        addressRegion: siteConfig.address.district,
+        postalCode: siteConfig.address.postalCode,
+        addressCountry: siteConfig.address.country,
+      },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: siteConfig.phoneNumbers[0].phone,
+          email: siteConfig.email,
+          contactType: "customer service",
+          availableLanguage: ["English", "Nepali"],
+        },
+      ],
+      sameAs: [
+        siteConfig.socials.facebook,
+        siteConfig.socials.instagram,
+      ].filter(Boolean),
     },
+    ...developerAttributionGraph(siteConfig.name, siteUrl)["@graph"],
   ],
-  sameAs: [
-    siteConfig.socials.facebook,
-    siteConfig.socials.instagram,
-  ].filter(Boolean),
 };
 
 export default function RootLayout({
@@ -112,13 +119,10 @@ export default function RootLayout({
           <Footer />
           <FloatingWhatsAppIcon />
         </TooltipProvider>
-        <Script
-          id="schema-organization"
+        <script
+          id="schema-attribution"
           type="application/ld+json"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </body>
     </html>
