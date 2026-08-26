@@ -308,20 +308,25 @@ export default async function TripPage({
 
               <div className="space-y-6 grid  md:grid-cols-2 mt-12 bg-canvas">
                 <div className="border-r">
-                  <IncludeExcludeCard
-                    variant="include"
-                    id="inclusions"
-                    html={trip.inclusions[0]}
-                  />
+                  {trip.inclusions &&
+                    <IncludeExcludeCard
+                      variant="include"
+                      id="inclusions"
+                      html={trip.inclusions[0]}
+                    />
+                  }
                 </div>
-                <IncludeExcludeCard
-                  variant="exclude"
-                  id="exclusions"
-                  html={trip.exclusions[0]}
-                />
+                {
+                  trip.exclusions &&
+                  <IncludeExcludeCard
+                    variant="exclude"
+                    id="exclusions"
+                    html={trip.exclusions[0]}
+                  />
+                }
               </div>
 
-              {trip.additionalInfo.length > 0 && (
+              {trip.additionalInfo && trip.additionalInfo.length > 0 && (
                 <>
                   <h2
                     id="trip-info"
