@@ -1,11 +1,5 @@
-import {
-  LucideArrowLeft,
-  LucideInfo,
-  LucidePlayCircle,
-} from "lucide-react";
+import { LucidePlayCircle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 export const dynamic = "force-dynamic";
 export async function generateStaticParams() {
   const res = await apiFetch(`/activity?page=1&limit=1000`);
@@ -14,11 +8,14 @@ export async function generateStaticParams() {
   return trips.map((trip) => ({ slug: trip.slug }));
 }
 import ImageGallery from "@/components/image-gallery";
-import { AdditionalInfoRenderer } from "@/components/additional-info-renderer";
+import {
+  AdditionalInfoRenderer,
+  type AdditionalInfoItem,
+} from "@/components/additional-info-renderer";
 import { TripItinerary } from "@/components/v0/trip-itinerary";
 import { TripOverview } from "@/components/v0/trip-overview";
 import { TripFaq } from "@/components/v0/trip-faq";
-import { decodeHtmlEntities } from "@/lib/html-decoder";
+import { decodeHtmlEntities, hasHtmlContent } from "@/lib/html-decoder";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
@@ -30,8 +27,8 @@ import PricingCardSidebar from "@/components/card/pricing-card";
 import { safeParseSchema } from "@/lib/safeParseSchema";
 import { siteConfig } from "@/lib/siteConfig";
 import { siteUrl, imageUrl } from "@/lib/seo";
-import { getFullImageUrl } from "@/lib/getFullImageUrl";
 import { apiFetch } from "@/lib/api";
+import { cn } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -144,6 +141,25 @@ export default async function TripPage({
   const jsonres = await res.json();
 
   const trip = jsonres.data;
+  const inclusionsHtml = Array.isArray(trip.inclusions)
+    ? trip.inclusions.find(hasHtmlContent)
+    : undefined;
+  const exclusionsHtml = Array.isArray(trip.exclusions)
+    ? trip.exclusions.find(hasHtmlContent)
+    : undefined;
+  const additionalInfo: AdditionalInfoItem[] = Array.isArray(
+    trip.additionalInfo,
+  )
+    ? trip.additionalInfo.filter(
+        (info: AdditionalInfoItem) =>
+          hasHtmlContent(info?.title) && hasHtmlContent(info?.description),
+      )
+    : [];
+  const includeExcludeId = inclusionsHtml
+    ? "inclusions"
+    : exclusionsHtml
+      ? "exclusions"
+      : undefined;
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -240,7 +256,11 @@ export default async function TripPage({
       </section>
 
       {/*Content starts */}
-      <SectionNavigation additionalInfo={trip.additionalInfo} slug={slug} />
+      <SectionNavigation
+        additionalInfo={additionalInfo}
+        includeExcludeId={includeExcludeId}
+        slug={slug}
+      />
       <div className="container mx-auto px-4">
         <div className="grid gap-12 min-w-0 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="min-w-0!">
@@ -306,45 +326,49 @@ export default async function TripPage({
                 </>
               )}
 
-              <div className="space-y-6 grid  md:grid-cols-2 mt-12 bg-canvas">
-                <div className="border-r">
-                  {trip.inclusions &&
+              {includeExcludeId ? (
+                <div
+                  className={cn(
+                    "space-y-6 grid mt-12 bg-canvas",
+                    inclusionsHtml && exclusionsHtml && "md:grid-cols-2",
+                  )}
+                >
+                  {inclusionsHtml ? (
+                    <div className={cn(exclusionsHtml && "md:border-r")}>
+                      <IncludeExcludeCard
+                        variant="include"
+                        id="inclusions"
+                        html={inclusionsHtml}
+                      />
+                    </div>
+                  ) : null}
+                  {exclusionsHtml ? (
                     <IncludeExcludeCard
-                      variant="include"
-                      id="inclusions"
-                      html={trip.inclusions[0]}
+                      variant="exclude"
+                      id="exclusions"
+                      html={exclusionsHtml}
                     />
-                  }
+                  ) : null}
                 </div>
-                {
-                  trip.exclusions &&
-                  <IncludeExcludeCard
-                    variant="exclude"
-                    id="exclusions"
-                    html={trip.exclusions[0]}
-                  />
-                }
-              </div>
+              ) : null}
 
-              {trip.additionalInfo && trip.additionalInfo.length > 0 && (
+              {additionalInfo.length > 0 ? (
                 <>
                   <h2
                     id="trip-info"
                     className="font-bold my-4 flex items-center gap-2 scroll-mt-28"
                   >
-                     Good to Know
+                    Good to Know
                   </h2>
-                  {trip.additionalInfo.map((info: any, idx: any) => {
-                    return (
-                      <AdditionalInfoRenderer
-                        key={idx}
-                        index={idx}
-                        item={info}
-                      />
-                    );
-                  })}
+                  {additionalInfo.map((info, idx) => (
+                    <AdditionalInfoRenderer
+                      key={idx}
+                      index={idx}
+                      item={info}
+                    />
+                  ))}
                 </>
-              )}
+              ) : null}
               <TripFaq trip={trip} />
             </div>
           </div>

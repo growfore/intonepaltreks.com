@@ -28,13 +28,17 @@ const staticSections: Section[] = [
   { id: "highlights", label: "Highlights", icon: <LucideStar /> },
   { id: "itinerary", label: "Itinerary", icon: <LucideMapPin /> },
   { id: "map", label: "Map", icon: <LucideMap /> },
-  { id: "inclusions", label: "Include/Exludes", icon: <LucideCheck /> },
-  // { id: "exclusions", label: "Excludes", icon: <LucideX /> },
-  { id: "gallery", label: "Trip Photos", icon: <LucideImages/>}
 ];
+
+const gallerySection: Section = {
+  id: "gallery",
+  label: "Trip Photos",
+  icon: <LucideImages />,
+};
 
 function buildSections(
   additionalInfo?: { title: string; slug?: string }[],
+  includeExcludeId?: "inclusions" | "exclusions",
 ): Section[] {
   const extra: Section[] = [];
   let costAdded = false;
@@ -58,27 +62,51 @@ function buildSections(
       }
     }
   }
-  return [...staticSections, ...extra, faqsSection];
+  return [
+    ...staticSections,
+    ...(includeExcludeId
+      ? [
+          {
+            id: includeExcludeId,
+            label: "Includes/Excludes",
+            icon:
+              includeExcludeId === "inclusions" ? (
+                <LucideCheck />
+              ) : (
+                <LucideX />
+              ),
+          },
+        ]
+      : []),
+    gallerySection,
+    ...extra,
+    faqsSection,
+  ];
 }
 
 export function SectionNavigation({
   additionalInfo,
+  includeExcludeId,
   slug,
 }: {
   additionalInfo?: { title: string; slug?: string }[];
+  includeExcludeId?: "inclusions" | "exclusions";
   slug?: string;
 }) {
-  const sections = buildSections(additionalInfo);
+  const sections = useMemo(
+    () => buildSections(additionalInfo, includeExcludeId),
+    [additionalInfo, includeExcludeId],
+  );
 
   const observedIds = useMemo(() => {
-    const ids = [...staticSections.map((s) => s.id), faqsSection.id];
+    const ids = sections.map((section) => section.id);
     if (additionalInfo) {
       for (const item of additionalInfo) {
         ids.push(item.slug || slugify(item.title));
       }
     }
-    return ids;
-  }, [additionalInfo]);
+    return [...new Set(ids)];
+  }, [additionalInfo, sections]);
 
   const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "");
   const [overviewPast, setOverviewPast] = useState(false);

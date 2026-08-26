@@ -35,3 +35,18 @@ export function decodeHtmlEntitiesComprehensive(html: string): string {
       String.fromCharCode(parseInt(dec, 10)),
     );
 }
+
+const htmlTagPattern = /<[^>]*>/g;
+const mediaTagPattern = /<(?:audio|iframe|img|video)\b/i;
+const invisibleCharacterPattern = /[\u200B-\u200D\uFEFF]/g;
+
+export function hasHtmlContent(html: unknown): html is string {
+  if (typeof html !== "string") return false;
+  if (mediaTagPattern.test(html)) return true;
+
+  return Boolean(
+    decodeHtmlEntitiesComprehensive(html.replace(htmlTagPattern, ""))
+      .replace(invisibleCharacterPattern, "")
+      .trim(),
+  );
+}
