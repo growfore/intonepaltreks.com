@@ -193,9 +193,9 @@ export default async function Footer() {
             {new Date().getFullYear()}. All rights reserved.
           </p>
           <div className="flex gap-2 items-center">
-            Designed and Developed by
-            <Link  href={"https://growfore.com/"} target="_blank" className="flex gap-1 items-center underline">
-              <Image src={"https://growfore.com/wp-content/uploads/2025/08/cropped-growfore-rounded-blue-on-white.png"} height={200} width={200} alt="Grofore Solution Logo" className="size-6" /> Growfore Solution.
+            Powered by
+            <Link  href={"https://tripeleven.com/"} target="_blank" className="flex gap-1 items-center underline">
+              Tripeleven
             </Link>
           </div>
         </div>
