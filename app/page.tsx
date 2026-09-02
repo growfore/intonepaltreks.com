@@ -74,9 +74,9 @@ export default async function Homepage() {
   }
 
   const featured = data?.data;
-  const featuredWithoutTOM = featured.featuredTags.filter(
+  const featuredWithoutTOM = featured?.featuredTags?.filter(
     (tag: { slug: string }) => tag.slug !== "trip-of-the-month",
-  );
+  ) ?? [];
   const firstFeatured = featuredWithoutTOM.slice(0, 1);
   const secondFeatured = featuredWithoutTOM.slice(1, 2);
   const thirdFeatured = featuredWithoutTOM.slice(2, 3);
