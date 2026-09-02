@@ -59,7 +59,7 @@ export default async function OurTeam() {
         subtitle="Meet the people behind every journey we create. Our team is made up of experienced guides, travel planners, and dedicated professionals who work together to deliver safe, memorable, and well-crafted adventures. From the mountains to your screen, every detail is handled with care."
       />
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24 space-y-16">
-        {Object.entries(departments).map(([deptId, members]) => (
+        {Object.entries(departments ?? {}).map(([deptId, members]) => (
           <div key={deptId}>
             <SectionHeading
               align="left"
