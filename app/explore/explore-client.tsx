@@ -29,8 +29,7 @@ type CountryItem = { id: string; countryHandle: string; countryName: string | nu
 
 export default function ExploreClient({ trips: initialTrips, categories, countries, initialCategory, initialCountry, initialSearch }: { trips: TripItem[]; categories: CategoryItem[]; countries: CountryItem[]; initialCategory?: string; initialCountry?: string; initialSearch?: string }) {
   const router = useRouter();
-  const [categoryTrips, setCategoryTrips] = useState<TripItem[] | null>(null);
-  const [countryTrips, setCountryTrips] = useState<TripItem[] | null>(null);
+  const [fetchedTrips, setFetchedTrips] = useState<TripItem[] | null>(null);
   const [search, setSearch] = useState(initialSearch ?? "");
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
@@ -61,40 +60,27 @@ export default function ExploreClient({ trips: initialTrips, categories, countri
   }, [selectedCategory, selectedCountry, router]);
 
   useEffect(() => {
-    if (!selectedCategory) return;
+    if (!selectedCategory && !selectedCountry) {
+      setFetchedTrips(null);
+      return;
+    }
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(
-          `/api/activity?category=${encodeURIComponent(selectedCategory)}&limit=50`,
-        );
+        const params = new URLSearchParams({ limit: "50" });
+        if (selectedCategory) params.set("category", selectedCategory);
+        if (selectedCountry) params.set("country", selectedCountry);
+        const res = await fetch(`/api/activity?${params.toString()}`);
         const json = await res.json();
-        if (!cancelled) setCategoryTrips(json.data ?? []);
+        if (!cancelled) setFetchedTrips(json.data ?? []);
       } catch {
-        if (!cancelled) setCategoryTrips([]);
+        if (!cancelled) setFetchedTrips([]);
       }
     })();
     return () => { cancelled = true; };
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedCountry]);
 
-  useEffect(() => {
-    if (!selectedCountry) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch(
-          `/api/activity?country=${encodeURIComponent(selectedCountry)}&limit=50`,
-        );
-        const json = await res.json();
-        if (!cancelled) setCountryTrips(json.data ?? []);
-      } catch {
-        if (!cancelled) setCountryTrips([]);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [selectedCountry]);
-
-  const trips = countryTrips !== null ? countryTrips : categoryTrips !== null ? categoryTrips : initialTrips;
+  const trips = fetchedTrips ?? initialTrips;
 
   const filtered = useMemo(() => {
     return trips.filter((trip: TripItem) => {
