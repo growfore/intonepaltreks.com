@@ -236,11 +236,10 @@ export default function DesignYourTrip() {
         .map((id) => INCLUSIONS.find((i) => i.id === id)?.label ?? id)
         .join(", ");
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`, {
+      const res = await fetch("/api/email/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "",
         },
         body: JSON.stringify({
           from: data.email,

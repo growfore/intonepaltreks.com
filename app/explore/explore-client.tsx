@@ -66,8 +66,7 @@ export default function ExploreClient({ trips: initialTrips, categories, countri
     (async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?category=${selectedCategory}&limit=50`,
-          { headers: { "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "" } },
+          `/api/activity?category=${encodeURIComponent(selectedCategory)}&limit=50`,
         );
         const json = await res.json();
         if (!cancelled) setCategoryTrips(json.data ?? []);
@@ -84,8 +83,7 @@ export default function ExploreClient({ trips: initialTrips, categories, countri
     (async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/activity?country=${selectedCountry}&limit=50`,
-          { headers: { "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "" } },
+          `/api/activity?country=${encodeURIComponent(selectedCountry)}&limit=50`,
         );
         const json = await res.json();
         if (!cancelled) setCountryTrips(json.data ?? []);

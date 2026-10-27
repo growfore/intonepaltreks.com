@@ -7,9 +7,8 @@ export async function apiFetch(
   path: string,
   init?: RequestInit,
 ): Promise<Response> {
-  const base =
-    process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "";
-  const key = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY || "";
+  const base = process.env.API_BASE_URL || "";
+  const key = process.env.API_KEY || "";
   const h = new Headers(init?.headers);
   if (key) h.set("X-Api-Key", key);
   return fetch(`${base}${path}`, { ...init, headers: h });

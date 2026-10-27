@@ -98,12 +98,11 @@ export function Form_Component({ packages }: { packages: TPackageDetails[] }) {
     setIsSubmitting(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`,
+        "/api/email/send",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY || "",
           },
           body: JSON.stringify({
             from: data.email,

@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
 
-const apiBaseUrl =
-  process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
+const apiBaseUrl = process.env.API_BASE_URL;
 const apiHostname = apiBaseUrl ? new URL(apiBaseUrl).hostname : undefined;
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Public (non-secret) origin for building absolute image URLs in client code.
+  env: { NEXT_PUBLIC_API_BASE_URL: apiBaseUrl ?? "" },
   logging: {
     fetches: {
       fullUrl: true,
