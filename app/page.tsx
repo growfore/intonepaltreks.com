@@ -75,7 +75,10 @@ export default async function Homepage() {
 
   const featured = data?.data;
   const featuredWithoutTOM = featured?.featuredTags?.filter(
-    (tag: { slug: string }) => tag.slug !== "trip-of-the-month",
+    (tag: { slug: string; showOnHomepage?: boolean; activity?: unknown[] }) =>
+      tag.showOnHomepage &&
+      tag.slug !== "trip-of-the-month" &&
+      (tag.activity?.length ?? 0) > 0,
   ) ?? [];
   const firstFeatured = featuredWithoutTOM.slice(0, 1);
   const secondFeatured = featuredWithoutTOM.slice(1, 2);
@@ -85,12 +88,12 @@ export default async function Homepage() {
     <>
       <HeroSection />
       <CategorySection />
-      <FeaturedSections featuredTags={firstFeatured} />
+      {firstFeatured.length > 0 && <FeaturedSections featuredTags={firstFeatured} />}
       <WelcomeSection />
-      <FeaturedSections featuredTags={secondFeatured} />
+      {secondFeatured.length > 0 && <FeaturedSections featuredTags={secondFeatured} />}
       {/*<FeaturedTrip />*/}
       <Testimonials />
-      <FeaturedSections featuredTags={thirdFeatured} />
+      {thirdFeatured.length > 0 && <FeaturedSections featuredTags={thirdFeatured} />}
       <WhySection />
     </>
   );
